@@ -1,0 +1,47 @@
+import uuid
+
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from django.conf import settings
+
+
+class User(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    phone = models.CharField(max_length=16, unique=True, blank=True, null=True)
+    phone_verified = models.BooleanField(default=False)
+    # Indicates if the user currently has an active paid subscription
+    premium_type = models.CharField(
+        choices=[(key, key) for key in settings.PREMIUM_TYPE_HIERARCHY.keys()],
+        blank=True, 
+        null=True,
+        max_length=20,
+        help_text="Type of premium subscription"
+    )
+    
+    current_project = models.ForeignKey('Project', on_delete=models.SET_NULL, null=True, blank=True, related_name="current_users")
+    
+
+class Project(models.Model):
+    """Model representing a project owned by a user."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="projects")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    
+
+class ProjectPermissions(models.Model):
+    """Model representing user permissions for a project."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="permissions")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="project_permissions")
+    can_edit = models.BooleanField(default=False)
+    can_view = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('project', 'user')
+

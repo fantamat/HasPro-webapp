@@ -1,0 +1,82 @@
+{% extends "user/base_manage_details.html" %}
+{% load allauth i18n %}
+{% block head_title %}
+    {% trans "User Details" %}
+{% endblock head_title %}
+{% block content %}
+    {% element h1 %}
+        {% trans "Account Information" %}
+    {% endelement %}
+
+    <div class="user-details-container">
+        <div class="details-card">
+            <div class="details-header">
+                <h3>{% trans "Basic Information" %}</h3>
+                <span class="details-icon">👤</span>
+            </div>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">{% trans "Username" %}</span>
+                    <span class="detail-value">{{ user.username }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">{% trans "Email" %}</span>
+                    <span class="detail-value">{{ user.email }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">{% trans "Status" %}</span>
+                    <span class="detail-value status-badge {% if user.is_active %}status-active{% else %}status-inactive{% endif %}">
+                        {{ user.is_active|yesno:_("Active,Inactive") }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-card">
+            <div class="details-header">
+                <h3>{% trans "Account History" %}</h3>
+                <span class="details-icon">📅</span>
+            </div>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">{% trans "Date joined" %}</span>
+                    <span class="detail-value">{{ user.date_joined|date:"M j, Y" }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">{% trans "Last login" %}</span>
+                    <span class="detail-value">
+                        {% if user.last_login %}
+                            {{ user.last_login|date:"M j, Y" }}
+                        {% else %}
+                            {% trans "Never" %}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {% if user.is_staff or user.is_superuser %}
+        <div class="details-card admin-card">
+            <div class="details-header">
+                <h3>{% trans "Administrative" %}</h3>
+                <span class="details-icon">🔐</span>
+            </div>
+            <div class="details-grid">
+                {% if user.is_staff %}
+                <div class="detail-item">
+                    <span class="detail-label">{% trans "Staff" %}</span>
+                    <span class="detail-value privilege-badge">{% trans "Yes" %}</span>
+                </div>
+                {% endif %}
+                {% if user.is_superuser %}
+                <div class="detail-item">
+                    <span class="detail-label">{% trans "Superuser" %}</span>
+                    <span class="detail-value privilege-badge superuser">{% trans "Yes" %}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+{% endblock content %}

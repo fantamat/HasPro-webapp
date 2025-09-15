@@ -10,4 +10,5 @@ dependencies = [
     "django-cookie-consent>=0.8.0",
     "fido2>=2.0.0",
     "jwt>=1.4.0",
+    "requests>=2.32.5",
 ]

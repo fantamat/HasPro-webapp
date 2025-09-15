@@ -1,0 +1,115 @@
+{% load i18n %}
+{% load cookie_consent_tags %}
+
+{% if request|cookie_consent_enabled %}
+{% not_accepted_or_declined_cookie_groups request as cookie_groups %}
+{% if cookie_groups %}
+
+<div class="cookie-banner cookie-container {% if cookie_consent_enabled %}cookie-consent-enabled{% endif %}" id="cookie-banner">
+    {% csrf_token %}
+    <div class="cookie-banner-inner">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p>{% translate "We use cookies to enhance your experience on our website. By continuing to use our site, you agree to our use of cookies." %}</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-primary me-2" onclick="acceptAllCookies()">{% translate "Accept All" %}</button>
+                    <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#cookieSettingsModal">{% translate "Settings" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Settings Modal -->
+<div class="modal fade" id="cookieSettingsModal" tabindex="-1" aria-hidden="true">
+    <!-- Cookie settings content goes here -->
+    <div class="modal-dialog">
+        <div class="modal-content cookie-container">
+            <div class="modal-header">
+                <h5 class="modal-title">{% translate "Cookie Settings" %}</h5>
+            </div>
+            <div class="modal-body">
+                <form id="cookieSettingsForm">
+                    {% for cookie_group in cookie_groups %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cookie_{{ cookie_group.varname }}" name="cookie_{{ cookie_group.varname }}" {% if cookie_group.default %}checked{% endif %}>
+                        <label class="form-check-label" for="cookie_{{ cookie_group.varname }}">
+                            {{ cookie_group.name }}
+                        </label>
+                        <p>{{ cookie_group.description }}</p>
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <button type="button" class="btn btn-primary" onclick="saveCookieSettings()">{% translate "Save Settings" %}</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function saveCookieSettings() {
+            const form = document.getElementById('cookieSettingsForm');
+            const formData = new FormData(form);
+            console.log(form)
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            Promise.all(
+                [{% for cookie_group in cookie_groups %}"{{ cookie_group.varname }}"{% if not forloop.last %}, {% endif %}{% endfor %}].map(cookieGroupName => {
+                    const cookieVarname = 'cookie_' + cookieGroupName;
+                    const isChecked = formData.get(cookieVarname) === 'on';
+                    const url = isChecked 
+                        ? "{% url 'cookie_consent_accept' 'cookie_group.varname' %}".replace('cookie_group.varname', cookieGroupName) 
+                        : "{% url 'cookie_consent_decline' 'cookie_group.varname' %}".replace('cookie_group.varname', cookieGroupName);
+                    return fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": csrfToken,
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: JSON.stringify({ accepted: isChecked })
+                    });
+                })
+            ).then(responses => {
+                if (responses.every(response => response.ok)) {
+                    window.location.reload();
+                } else {
+                    console.error("One or more requests failed.");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+            });
+        }
+    </script>
+</div>
+
+<script>
+    function acceptAllCookies() {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch("{% url 'cookie_consent_accept_all' %}", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+            "X-Requested-With": "XMLHttpRequest"
+            },
+            body: JSON.stringify({})
+        }).then(response => {
+            if (!response.ok) {
+                console.error("Failed to accept all cookies");
+            } else {
+                document.getElementById('cookie-banner').style.display = 'none';
+            }
+        }).catch(error => {
+            console.error("Error:", error);
+        });
+    }
+
+</script>
+{% endif %}
+{% endif %}

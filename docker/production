@@ -1,0 +1,39 @@
+FROM python:3.13-slim AS final
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DEBUG=False \
+    DATABASE_NAME=/app/data/db.sqlite3
+
+WORKDIR /app
+
+# Copy files needed for installation
+COPY requirements/dev.txt ./requirements/dev.txt
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    gettext \
+    git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies with uv
+RUN pip install uv && \
+    uv venv --python=python3.12 && \
+    uv pip sync requirements/dev.txt && \
+    uv pip install uvicorn && \
+    pip uninstall -y uv
+
+# activate the virtual environment
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Copy app files
+COPY data/codebase/haspro ./haspro/
+COPY data/migrations/haspro /app/haspro/migrations
+COPY data/migrations/users /app/haspro/users/migrations
+
+
+WORKDIR /app/haspro
+
+EXPOSE 8000
+
+CMD ["uvicorn", "haspro.asgi:application", "--host", "0.0.0.0", "--port", "8000"]
