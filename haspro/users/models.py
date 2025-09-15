@@ -10,13 +10,10 @@ class User(AbstractUser):
     phone = models.CharField(max_length=16, unique=True, blank=True, null=True)
     phone_verified = models.BooleanField(default=False)
     # Indicates if the user currently has an active paid subscription
-    premium_type = models.CharField(
-        choices=[(key, key) for key in settings.PREMIUM_TYPE_HIERARCHY.keys()],
-        blank=True, 
-        null=True,
-        max_length=20,
-        help_text="Type of premium subscription"
-    )
+
+    signature = models.FileField(upload_to='signatures/', blank=True, null=True)
+
+    technicianID = models.CharField(max_length=100, blank=True, null=True)
     
     current_project = models.ForeignKey('Project', on_delete=models.SET_NULL, null=True, blank=True, related_name="current_users")
     
