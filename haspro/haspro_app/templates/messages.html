@@ -1,0 +1,19 @@
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }} fade-message">
+        {{ message }}
+        {% if show_close_btn %}
+        <button type="button" class="btn-close" onclick="this.parentElement.remove();"><i class="fas fa-times"></i></button>
+        {% endif %}
+    </div>
+{% endfor %}
+
+<script>
+    setTimeout(function() {
+        var el = document.querySelectorAll('.fade-message');
+        el.forEach(function(div) {
+            div.style.transition = "opacity 3s";
+            div.style.opacity = 0;
+            setTimeout(function() { div.remove(); }, 3000);
+        });
+    }, 2000);
+</script>

@@ -1,6 +1,10 @@
 from django.db import models
 
+from users.models import Project, User
+
+
 class Company(models.Model):
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="companies")
 	name = models.CharField(max_length=255)
 	address = models.CharField(max_length=255)
 	city = models.CharField(max_length=100)
@@ -19,6 +23,7 @@ class BuildingOwner(models.Model):
 	zipcode = models.CharField(max_length=20)
 	ico = models.CharField("IČO", max_length=20)
 	dic = models.CharField("DIČ", max_length=20)
+	managed_by = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
 		return self.name
@@ -46,6 +51,9 @@ class Building(models.Model):
 	def __str__(self):
 		return f"{self.building_id} - {self.address}"
 
+	def get_full_address(self):
+		return f"{self.address}, {self.city}, {self.zipcode}"
+
 class Fault(models.Model):
 	short_name = models.CharField(max_length=100)
 	description = models.TextField()
@@ -60,13 +68,18 @@ class Firedistinguisher(models.Model):
 	serial_number = models.CharField(max_length=100)
 	eliminated = models.BooleanField(default=False)
 	last_inspection = models.DateField(null=True, blank=True)
-	manufactured_at = models.DateField(null=True, blank=True)
+	manufactured_year = models.IntegerField(null=True, blank=True)
 	last_fullfilment = models.DateField(null=True, blank=True)
+	managed_by = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
 		return f"{self.kind} {self.serial_number}"
 
-class FireDistinguisherPlacement(models.Model):
+	def get_current_placement(self):
+		placement = FiredistinguisherPlacement.objects.filter(firedistinguisher=self).order_by('-created_at').first()
+		return placement
+
+class FiredistinguisherPlacement(models.Model):
 	description = models.CharField(max_length=255)
 	created_at = models.DateTimeField(auto_now_add=True)
 	firedistinguisher = models.ForeignKey(Firedistinguisher, on_delete=models.CASCADE)
@@ -74,3 +87,35 @@ class FireDistinguisherPlacement(models.Model):
 
 	def __str__(self):
 		return self.description
+	
+
+class FiredistinguisherAction(models.Model):
+	description = models.CharField(max_length=255)
+	created_at = models.DateTimeField(auto_now_add=True)
+	firedistinguisher = models.ForeignKey(Firedistinguisher, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.description
+
+
+
+class InspectionRecord(models.Model):
+    inspector = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    date = models.DateField(auto_now_add=True)
+    notes = models.TextField(blank=True, null=True)
+    building = models.ForeignKey(Building, on_delete=models.CASCADE)
+
+    record = models.BinaryField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Inspection on {self.date} by {self.inspector}"
+	
+
+class InspectionRecordActions(models.Model):
+    inspection_record = models.ForeignKey(InspectionRecord, on_delete=models.CASCADE, related_name="actions")
+    action_description = models.TextField()
+    performed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Action for {self.inspection_record} at {self.performed_at}"
+	

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add Fire Distinguisher</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'haspro_app:firedistinguisher-list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% if placements %}
+<h3>Placement History</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Building ID</th>
+            <th>Building Address</th>
+            <th>Description</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for placement in placements %}
+        <tr>
+            <td>{{ placement.building.building_id }}</td>
+            <td>{{ placement.building.get_full_address }}</td>
+            <td>{{ placement.description }}</td>
+            <td>{{ placement.created_at }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No placements found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}

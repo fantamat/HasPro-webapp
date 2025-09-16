@@ -15,6 +15,7 @@ REGISTERED_MODELS = [
 ]
 
 SKIP_FIELDS = {
+    "password"
 }
 
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Company, BuildingOwner, BuildingManager, Building, Fault, Firedistinguisher, FireDistinguisherPlacement
+from .models import Company, BuildingOwner, BuildingManager, Building, Fault, Firedistinguisher, FiredistinguisherPlacement
 
 
 REGISTERED_MODELS = [
@@ -9,7 +9,7 @@ REGISTERED_MODELS = [
     Building,
     Fault,
     Firedistinguisher,
-    FireDistinguisherPlacement,
+    FiredistinguisherPlacement,
 ]
 
 SKIP_FIELDS = {

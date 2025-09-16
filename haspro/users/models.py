@@ -16,7 +16,10 @@ class User(AbstractUser):
     technicianID = models.CharField(max_length=100, blank=True, null=True)
     
     current_project = models.ForeignKey('Project', on_delete=models.SET_NULL, null=True, blank=True, related_name="current_users")
-    
+
+    def __str__(self):
+        return self.username
+
 
 class Project(models.Model):
     """Model representing a project owned by a user."""
@@ -27,6 +30,8 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
     
 
 class ProjectPermissions(models.Model):
@@ -42,3 +47,5 @@ class ProjectPermissions(models.Model):
     class Meta:
         unique_together = ('project', 'user')
 
+    def __str__(self):
+        return f"{self.user.username} - {self.project.name} Permissions"
