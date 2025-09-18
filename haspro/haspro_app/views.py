@@ -7,6 +7,7 @@ from .forms.fireestinguisher_form import FiredistinguisherForm
 from .forms.feplacement_form import FiredistinguisherPlacementForm
 from .utils.db_dump import create_snapshot_file
 from .utils.imports import import_building_manager_data, import_firedistinguisher_data
+from .utils.add_inspection import add_inspection
 from django.http import FileResponse
 from django.contrib import messages
 import logging
@@ -202,6 +203,7 @@ def export_reports_for_owner(request, owner_id):
     pass
 
 
+
 # _______________________________ Mobile app interface _______________________________
 
 def get_db_snapshot(request):
@@ -222,8 +224,24 @@ def get_db_snapshot(request):
     return FileResponse(buffer, as_attachment=True, filename='db_snapshot.bin')
 
 
-def upload_inspection_data(request):
+def upload_inspection_records(request):
     # Handle uploaded inspection data from mobile app
-    pass
+    if request.method == 'POST':
+        file = request.FILES.get('file')
+        if file:
+            company = Company.objects.filter(project=request.user.current_project).first()
+            if not company:
+                messages.error(request, "Error updating inspection records: No company found.")
+                return redirect('haspro_app:tools-view')
 
+            num_updated, error_message = add_inspection(user, company, file)
+            if error_message:
+                messages.error(request, f"Error updating inspection records: {error_message}")
+            else:
+                messages.success(request, f"Successfully updated {num_updated} inspection records.")
+
+        else:
+            messages.error(request, "Error updating inspection records: No file provided.")
+
+    return redirect('haspro_app:tools-view')
 

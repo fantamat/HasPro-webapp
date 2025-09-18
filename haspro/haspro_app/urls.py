@@ -26,6 +26,7 @@ urlpatterns = [
 
 	path('import/building_manager/', views.import_building_manager_list, name='import-building-manager-list'),
 	path('import/firedistinguisher/', views.import_firedistinguisher_list, name='import-firedistinguisher-list'),
-    
-    path('db/dump/snapshot/', views.get_db_snapshot, name='export-db-dump')
+
+    path('db/dump/snapshot/', views.get_db_snapshot, name='export-db-dump'),
+    path('db/inspection/upload/', views.upload_inspection_records, name='upload-inspection-records'),
 ]

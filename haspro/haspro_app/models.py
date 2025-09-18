@@ -113,8 +113,8 @@ class InspectionRecord(models.Model):
     date = models.DateField(auto_now_add=True)
     notes = models.TextField(blank=True, null=True)
     building = models.ForeignKey(Building, on_delete=models.CASCADE)
-
-    record = models.BinaryField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    uploaded_file = models.FileField(upload_to='inspection_uploads/', blank=True, null=True)
 
     def __str__(self):
         return f"Inspection on {self.date} by {self.inspector}"
@@ -127,17 +127,27 @@ class FaultInspection(models.Model):
     responsible_person = models.CharField(max_length=255, blank=True, null=True)
     fix_due_date = models.DateField(blank=True, null=True)
     resolved = models.BooleanField(default=False)
-    photo_documentation = models.ManyToManyField('FaultPhoto', blank=True)
+    present = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Fault {self.fault.short_name} in inspection {self.inspection.id}"
 	
 
+class FiredistinguisherCondition(models.TextChoices):
+	NEW = 'New', 'New'
+	OK = 'OK', 'OK'
+	NOK = 'NOK', 'NOK'
+
 class FiredistinguisherInspection(models.Model):
     firedistinguisher = models.ForeignKey(Firedistinguisher, on_delete=models.CASCADE)
     inspection = models.ForeignKey(InspectionRecord, on_delete=models.CASCADE)
     notes = models.TextField(blank=True, null=True)
-    condition = models.CharField(max_length=255, blank=True, null=True)
+    condition = models.CharField(
+		max_length=20,
+		choices=FiredistinguisherCondition.choices,
+		blank=True,
+		null=True
+	)
     fullfilment_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
@@ -146,8 +156,10 @@ class FiredistinguisherInspection(models.Model):
 
 
 class FaultPhoto(models.Model):
+    fault_inspection = models.ForeignKey(FaultInspection, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to='fault_photos/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Photo {self.id} uploaded at {self.uploaded_at}"
+
