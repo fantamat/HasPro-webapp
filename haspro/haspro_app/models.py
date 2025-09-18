@@ -57,9 +57,17 @@ class Building(models.Model):
 class Fault(models.Model):
 	short_name = models.CharField(max_length=100)
 	description = models.TextField()
+	default_fix_time_days = models.IntegerField()
 
 	def __str__(self):
 		return self.short_name
+	
+class PossibleFault(models.Model):
+	fault = models.ForeignKey(Fault, on_delete=models.CASCADE)
+	building = models.ForeignKey(Building, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return f"{self.fault.short_name} in {self.building.building_id}"
 
 class Firedistinguisher(models.Model):
 	kind = models.CharField(max_length=100)
@@ -89,14 +97,15 @@ class FiredistinguisherPlacement(models.Model):
 		return self.description
 	
 
-class FiredistinguisherAction(models.Model):
+class FiredistinguisherServiceAction(models.Model):
+	action_type = models.CharField(max_length=100)
 	description = models.CharField(max_length=255)
 	created_at = models.DateTimeField(auto_now_add=True)
 	firedistinguisher = models.ForeignKey(Firedistinguisher, on_delete=models.CASCADE)
 
 	def __str__(self):
 		return self.description
-
+	
 
 
 class InspectionRecord(models.Model):
@@ -111,11 +120,34 @@ class InspectionRecord(models.Model):
         return f"Inspection on {self.date} by {self.inspector}"
 	
 
-class InspectionRecordActions(models.Model):
-    inspection_record = models.ForeignKey(InspectionRecord, on_delete=models.CASCADE, related_name="actions")
-    action_description = models.TextField()
-    performed_at = models.DateTimeField(auto_now_add=True)
+class FaultInspection(models.Model):
+    fault = models.ForeignKey(Fault, on_delete=models.CASCADE)
+    inspection = models.ForeignKey(InspectionRecord, on_delete=models.CASCADE)
+    notes = models.TextField(blank=True, null=True)
+    responsible_person = models.CharField(max_length=255, blank=True, null=True)
+    fix_due_date = models.DateField(blank=True, null=True)
+    resolved = models.BooleanField(default=False)
+    photo_documentation = models.ManyToManyField('FaultPhoto', blank=True)
 
     def __str__(self):
-        return f"Action for {self.inspection_record} at {self.performed_at}"
+        return f"Fault {self.fault.short_name} in inspection {self.inspection.id}"
 	
+
+class FiredistinguisherInspection(models.Model):
+    firedistinguisher = models.ForeignKey(Firedistinguisher, on_delete=models.CASCADE)
+    inspection = models.ForeignKey(InspectionRecord, on_delete=models.CASCADE)
+    notes = models.TextField(blank=True, null=True)
+    condition = models.CharField(max_length=255, blank=True, null=True)
+    fullfilment_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Fire Distinguisher {self.firedistinguisher.serial_number} in inspection {self.inspection.id}"
+	
+
+
+class FaultPhoto(models.Model):
+    photo = models.ImageField(upload_to='fault_photos/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Photo {self.id} uploaded at {self.uploaded_at}"

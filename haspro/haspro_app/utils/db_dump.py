@@ -1,18 +1,20 @@
 import sqlite3
+import io
+import tempfile
+
 from haspro_app.models import Company, BuildingOwner, BuildingManager, Building, Fault, Firedistinguisher, FiredistinguisherPlacement
 
-def export_project_to_sqlite(project_id, buffer):
+def export_project_to_sqlite(company, file_name):
     # Query all related records
-    companies = Company.objects.filter(project_id=project_id)
-    owners = BuildingOwner.objects.filter(managed_by__in=companies)
+    owners = BuildingOwner.objects.filter(managed_by=company)
     managers = BuildingManager.objects.all()
-    buildings = Building.objects.filter(company__in=companies)
+    buildings = Building.objects.filter(company=company)
     faults = Fault.objects.all()
-    firedistinguisher = Firedistinguisher.objects.filter(managed_by__in=companies)
+    firedistinguisher = Firedistinguisher.objects.filter(managed_by=company)
     placements = FiredistinguisherPlacement.objects.filter(firedistinguisher__in=firedistinguisher)
 
     # Create SQLite DB
-    conn = sqlite3.connect(buffer)
+    conn = sqlite3.connect(file_name)
     c = conn.cursor()
 
     # Create tables
@@ -79,10 +81,17 @@ def export_project_to_sqlite(project_id, buffer):
         firedistinguisher INTEGER,
         building INTEGER
     )''')
+    c.execute('''CREATE TABLE files (
+              id INTEGER PRIMARY KEY,
+              name TEXT,
+              path TEXT,
+              content BLOB,
+              created_at TEXT,
+              updated_at TEXT
+    )''')
 
     # Insert data
-    for obj in companies:
-        c.execute('INSERT INTO company VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.name, obj.address, obj.city, obj.zipcode, obj.ico, obj.dic, str(obj.logo)])
+    c.execute('INSERT INTO company VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [company.id, company.name, company.address, company.city, company.zipcode, company.ico, company.dic, str(company.logo)])
     for obj in owners:
         c.execute('INSERT INTO buildingowner VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.name, obj.address, obj.city, obj.zipcode, obj.ico, obj.dic, obj.managed_by_id])
     for obj in managers:
@@ -96,17 +105,32 @@ def export_project_to_sqlite(project_id, buffer):
     for obj in placements:
         c.execute('INSERT INTO firedistinguisherplacement VALUES (?, ?, ?, ?, ?)', [obj.id, obj.description, str(obj.created_at), obj.firedistinguisher_id, obj.building_id])
 
+    # Insert company logo file into files table if logo exists
+    if company.logo:
+        c.execute(
+            'INSERT INTO files (id, name, path, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)',
+            [company.logo.file.id if hasattr(company.logo, 'file') and hasattr(company.logo.file, 'id') else company.id,
+             getattr(company.logo, 'name', 'logo'),
+             str(company.logo),
+             company.logo.read() if hasattr(company.logo, 'read') else None,
+             getattr(company.logo, 'created_at', None),
+             getattr(company.logo, 'updated_at', None)]
+        )
+
     conn.commit()
+    
+    c.execute('VACUUM')
     conn.close()
 
-# Example usage:
-# export_project_to_sqlite(project_id=1, output_path='/tmp/project_dump.sqlite')
 
-import io
-
-
-def create_snapshot_file_for_user(user):
+def create_snapshot_file(company):
     buffer = io.BytesIO()
-    export_project_to_sqlite(project_id=user.current_project.id, buffer=buffer)
+
+    with tempfile.NamedTemporaryFile(delete=True) as temp_file:
+        export_project_to_sqlite(company, temp_file.name)
+
+        with open(temp_file.name, 'rb') as f:
+            buffer.write(f.read())
+
     buffer.seek(0)
     return buffer

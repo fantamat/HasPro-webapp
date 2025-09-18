@@ -5,7 +5,7 @@ from .forms.building_form import BuildingForm
 from .forms.owner_form import BuildingOwnerForm
 from .forms.fireestinguisher_form import FiredistinguisherForm
 from .forms.feplacement_form import FiredistinguisherPlacementForm
-from .utils.db_dump import create_snapshot_file_for_user
+from .utils.db_dump import create_snapshot_file
 from .utils.imports import import_building_manager_data, import_firedistinguisher_data
 from django.http import FileResponse
 from django.contrib import messages
@@ -30,7 +30,7 @@ def building_create(request):
             return redirect('haspro_app:building-list')
     else:
         form = BuildingForm()
-    return render(request, 'building/building_form.html', {'form': form})
+    return render(request, 'building/building_form.html', {'form': form, 'create': True})
 
 
 def building_edit(request, pk):
@@ -42,7 +42,7 @@ def building_edit(request, pk):
             return redirect('haspro_app:building-list')
     else:
         form = BuildingForm(instance=building)
-    return render(request, 'building/building_form.html', {'form': form})
+    return render(request, 'building/building_form.html', {'form': form, 'create': False})
 
 def building_delete(request, pk):
     building = Building.objects.get(pk=pk)
@@ -66,7 +66,7 @@ def buildingowner_create(request):
             return redirect('haspro_app:buildingowner-list')
     else:
         form = BuildingOwnerForm()
-    return render(request, 'buildingowner/buildingowner_form.html', {'form': form})
+    return render(request, 'buildingowner/buildingowner_form.html', {'form': form, 'create': True})
 
 def buildingowner_edit(request, pk):
     owner = BuildingOwner.objects.get(pk=pk)
@@ -77,7 +77,7 @@ def buildingowner_edit(request, pk):
             return redirect('haspro_app:buildingowner-list')
     else:
         form = BuildingOwnerForm(instance=owner)
-    return render(request, 'buildingowner/buildingowner_form.html', {'form': form})
+    return render(request, 'buildingowner/buildingowner_form.html', {'form': form, 'create': False})
 
 def buildingowner_delete(request, pk):
     owner = BuildingOwner.objects.get(pk=pk)
@@ -102,7 +102,7 @@ def firedistinguisher_create(request):
             return redirect('haspro_app:firedistinguisher-list')
     else:
         form = FiredistinguisherForm()
-    return render(request, 'firedistinguisher/firedistinguisher_form.html', {'form': form})
+    return render(request, 'firedistinguisher/firedistinguisher_form.html', {'form': form, 'create': True})
 
 
 def firedistinguisher_edit(request, pk):
@@ -117,7 +117,7 @@ def firedistinguisher_edit(request, pk):
     
     placements = FiredistinguisherPlacement.objects.filter(firedistinguisher=firedistinguisher).order_by('-created_at')
 
-    return render(request, 'firedistinguisher/firedistinguisher_form.html', {'form': form, 'placements': placements})
+    return render(request, 'firedistinguisher/firedistinguisher_form.html', {'form': form, 'create': False, 'placements': placements})
 
 
 def firedistinguisher_delete(request, pk):
@@ -129,10 +129,9 @@ def firedistinguisher_delete(request, pk):
 
 # _______________________________ Data Imports _______________________________
 
-def imports_view(request):
+def tools_view(request):
     company = Company.objects.filter(project=request.user.current_project).first()
-    # Placeholder for data import logic
-    return render(request, 'imports/import.html', {'owners': BuildingOwner.objects.filter(managed_by=company).all()})
+    return render(request, 'tools/tools.html', {'owners': BuildingOwner.objects.filter(managed_by=company).all()})
 
 
 
@@ -146,10 +145,10 @@ def import_building_manager_list(request):
                     owner = BuildingOwner.objects.get(id=int(request.POST['owner']), managed_by=company)
                 except BuildingOwner.DoesNotExist:
                     messages.error(request, f"Error importing building manager data: Selected owner does not exist.")
-                    return redirect('haspro_app:imports-view')
+                    return redirect('haspro_app:tools-view')
             else:
                 messages.error(request, f"Error importing building manager data: No owner selected.")
-                return redirect('haspro_app:imports-view')
+                return redirect('haspro_app:tools-view')
                 
             num_imported, error_message = import_building_manager_data(file, owner, company)
             if error_message:
@@ -160,7 +159,7 @@ def import_building_manager_list(request):
         else:
             messages.error(request, f"Error importing building manager data no file provided")
 
-    return redirect('haspro_app:imports-view')
+    return redirect('haspro_app:tools-view')
 
 
 def import_firedistinguisher_list(request):
@@ -173,10 +172,10 @@ def import_firedistinguisher_list(request):
                     owner = BuildingOwner.objects.get(id=int(request.POST['owner']), managed_by=company)
                 except BuildingOwner.DoesNotExist:
                     messages.error(request, f"Error importing fire distinguisher data: Selected owner does not exist.")
-                    return redirect('haspro_app:imports-view')
+                    return redirect('haspro_app:tools-view')
             else:
                 messages.error(request, f"Error importing fire distinguisher data: No owner selected.")
-                return redirect('haspro_app:imports-view')
+                return redirect('haspro_app:tools-view')
 
             num_imported, error_message = import_firedistinguisher_data(file, company)
             if error_message:
@@ -186,7 +185,7 @@ def import_firedistinguisher_list(request):
 
         else:
             messages.error(request, f"Error importing fire distinguisher data no file provided")
-    return redirect('haspro_app:imports-view')
+    return redirect('haspro_app:tools-view')
 
 
 
@@ -212,7 +211,10 @@ def get_db_snapshot(request):
 
     # Logic to create a snapshot
     try:
-        buffer = create_snapshot_file_for_user(request.user)
+        company = Company.objects.filter(project=request.user.current_project).first()
+        if not company:
+            return render(request, '404.html', status=404)
+        buffer = create_snapshot_file(company)
     except Exception as e:
         logger.error(f"Error creating snapshot for user {request.user.id}: {e} Traceback: {traceback.format_exc()}", exc_info=True)
         return render(request, '500.html', status=500)

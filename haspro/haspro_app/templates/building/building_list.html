@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>Buildings</h2>
-<a href="{% url 'haspro_app:building-create' %}" class="btn btn-primary mb-3">Add Building</a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -13,12 +12,11 @@
             <th>Owner</th>
             <th>Manager</th>
             <th>Note</th>
-            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for building in buildings %}
-        <tr>
+        <tr onclick="window.location.href = `{% url 'haspro_app:building-edit' building.pk %}`;">
             <td>{{ building.building_id }}</td>
             <td>{{ building.address }}</td>
             <td>{{ building.city }}</td>
@@ -27,18 +25,11 @@
             <td>{{ building.owner }}</td>
             <td>{{ building.manager }}</td>
             <td>{{ building.note }}</td>
-            <td>
-                <a href="{% url 'haspro_app:building-edit' building.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                
-                <form action="{% url 'haspro_app:building-delete' building.pk %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this building?');">Delete</button>
-                </form>
-            </td>
         </tr>
         {% empty %}
         <tr><td colspan="8">No buildings found.</td></tr>
         {% endfor %}
     </tbody>
 </table>
+<a href="{% url 'haspro_app:building-create' %}" class="btn-add">Add Building</a>
 {% endblock %}

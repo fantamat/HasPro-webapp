@@ -1,39 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Import table with buildings with its managers</h2>
 
 
 <form method="post" action="{% url 'haspro_app:import-building-manager-list' %}" enctype="multipart/form-data">
+    <h2>Import table with buildings with its managers</h2>
     {% csrf_token %}
-    <div>
+    <p>
         <label for="owner" class="form-label">Select Owner</label>
         <select class="form-select" id="owner" name="owner">
             {% for owner in owners %}
                 <option value="{{ owner.id }}">{{ owner.name }}</option>
             {% endfor %}
         </select>
+    </p>
+    <p>
         <label for="file" class="form-label">Choose file to import</label>
         <input type="file" class="form-control" id="file" name="file">
-    </div>
-    <button type="submit" class="btn btn-success">Import</button>
+    </p>
+    <button type="submit" class="btn">Import</button>
 </form>
 
 
-<h2>Import table with fire distinguishers</h2>
 
 <form method="post" action="{% url 'haspro_app:import-firedistinguisher-list' %}" enctype="multipart/form-data">
+    <h2>Import table with fire distinguishers</h2>
+
     {% csrf_token %}
-    <div>
+    <p>
         <label for="owner" class="form-label">Select Owner</label>
         <select class="form-select" id="owner" name="owner">
             {% for owner in owners %}
                 <option value="{{ owner.id }}">{{ owner.name }}</option>
             {% endfor %}
         </select>
+    </p>
+    <p>
         <label for="file" class="form-label">Choose file to import</label>
         <input type="file" class="form-control" id="file" name="file">
-    </div>
-    <button type="submit" class="btn btn-success">Import</button>
+    </p>
+    <button type="submit" class="btn">Import</button>
 </form>
+
+<form method="post" action="" enctype="multipart/form-data">
+    <h2>Export my company data</h2>
+
+    {% csrf_token %}
+    <p>
+        <label for="owner" class="form-label">Select Owner</label>
+        <select class="form-select" id="owner" name="owner">
+            {% for owner in owners %}
+                <option value="{{ owner.id }}">{{ owner.name }}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <p>
+        <label for="file" class="form-label">Choose file to import</label>
+        <input type="file" class="form-control" id="file" name="file">
+    </p>
+    <button type="submit" class="btn">Import</button>
+</form>
+
 
 {% endblock %}
