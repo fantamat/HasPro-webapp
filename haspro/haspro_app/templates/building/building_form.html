@@ -17,5 +17,52 @@
     </div>
 </form>
 
+{% if not create and form.instance.manager %}
+<h3>Building Manager</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr onclick="window.location.href='{% url 'haspro_app:buildingmanager-edit' form.instance.manager.pk %}'" style="cursor: pointer;">
+            <td>{{ form.instance.manager.name }}</td>
+            <td>{{ form.instance.manager.email }}</td>
+            <td>{{ form.instance.manager.phone }}</td>
+        </tr>
+    </tbody>
+</table>    
+{% endif %}
+
+{% if not create and firedistinguishers %}
+<h3>Fire Distinguishers in this Building</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Serial Number</th>
+            <th>Kind</th>
+            <th>Type</th>
+            <th>Manufacturer</th>
+            <th>Manufactured Year</th>
+            <th>Eliminated</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for fd in firedistinguishers %}
+        <tr onclick="window.location.href='{% url 'haspro_app:firedistinguisher-edit' fd.pk %}'" style="cursor: pointer;">
+            <td>{{ fd.serial_number }}</td>
+            <td>{{ fd.kind }}</td>
+            <td>{{ fd.type }}</td>
+            <td>{{ fd.manufacturer }}</td>
+            <td>{{ fd.manufactured_year }}</td>
+            <td>{% if fd.eliminated %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 
 {% endblock %}

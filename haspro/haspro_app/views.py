@@ -1,8 +1,9 @@
 
 from django.shortcuts import render, redirect
-from .models import Building, BuildingOwner, Firedistinguisher, FiredistinguisherPlacement, Company
+from .models import Building, BuildingOwner, BuildingManager, Firedistinguisher, FiredistinguisherPlacement, Company
 from .forms.building_form import BuildingForm
 from .forms.owner_form import BuildingOwnerForm
+from .forms.buildingmanager_form import BuildingManagerForm
 from .forms.fireestinguisher_form import FiredistinguisherForm
 from .forms.feplacement_form import FiredistinguisherPlacementForm
 from .utils.db_dump import create_snapshot_file
@@ -12,6 +13,7 @@ from django.http import FileResponse
 from django.contrib import messages
 import logging
 import traceback
+from django.db.models import Max
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +45,19 @@ def building_edit(request, pk):
             return redirect('haspro_app:building-list')
     else:
         form = BuildingForm(instance=building)
-    return render(request, 'building/building_form.html', {'form': form, 'create': False})
+
+    # Get the latest placement for each firedistinguisher in the building
+    latest_placements_ids = (
+        FiredistinguisherPlacement.objects
+        .filter(building=building)
+        .values('firedistinguisher')
+        .annotate(latest_id=Max('id'))
+        .values_list('latest_id', flat=True)
+    )
+
+    firedistinguishers = Firedistinguisher.objects.filter(id__in=latest_placements_ids)
+
+    return render(request, 'building/building_form.html', {'form': form, 'create': False, 'firedistinguishers': firedistinguishers})
 
 def building_delete(request, pk):
     building = Building.objects.get(pk=pk)
@@ -78,7 +92,9 @@ def buildingowner_edit(request, pk):
             return redirect('haspro_app:buildingowner-list')
     else:
         form = BuildingOwnerForm(instance=owner)
-    return render(request, 'buildingowner/buildingowner_form.html', {'form': form, 'create': False})
+
+    managed_buildings = Building.objects.filter(owner=owner).all()
+    return render(request, 'buildingowner/buildingowner_form.html', {'form': form, 'create': False, 'buildings': managed_buildings})
 
 def buildingowner_delete(request, pk):
     owner = BuildingOwner.objects.get(pk=pk)
@@ -86,6 +102,43 @@ def buildingowner_delete(request, pk):
         owner.delete()
         messages.success(request, f"Building owner deleted {owner.name}.")
     return redirect('haspro_app:buildingowner-list')
+
+
+# _______________________________ Building Manager _______________________________
+
+def buildingmanager_list(request):
+    managers = BuildingManager.objects.all()
+    return render(request, 'buildingmanager/buildingmanager_list.html', {'managers': managers})
+
+def buildingmanager_create(request):
+    if request.method == 'POST':
+        form = BuildingManagerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('haspro_app:buildingmanager-list')
+    else:
+        form = BuildingManagerForm()
+    return render(request, 'buildingmanager/buildingmanager_form.html', {'form': form, 'create': True})
+
+def buildingmanager_edit(request, pk):
+    manager = BuildingManager.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = BuildingManagerForm(request.POST, instance=manager)
+        if form.is_valid():
+            form.save()
+            return redirect('haspro_app:buildingmanager-list')
+    else:
+        form = BuildingManagerForm(instance=manager)
+
+    managed_buildings = Building.objects.filter(manager=manager).all()
+    return render(request, 'buildingmanager/buildingmanager_form.html', {'form': form, 'create': False, 'buildings': managed_buildings})
+
+def buildingmanager_delete(request, pk):
+    manager = BuildingManager.objects.get(pk=pk)
+    if request.method == 'POST':
+        manager.delete()
+        messages.success(request, f"Building manager deleted {manager.name}.")
+    return redirect('haspro_app:buildingmanager-list')
 
 
 # _______________________________ Fire Distinguisher _______________________________
@@ -178,7 +231,7 @@ def import_firedistinguisher_list(request):
                 messages.error(request, f"Error importing fire distinguisher data: No owner selected.")
                 return redirect('haspro_app:tools-view')
 
-            num_imported, error_message = import_firedistinguisher_data(file, company)
+            num_imported, error_message = import_firedistinguisher_data(file, owner, company)
             if error_message:
                 messages.error(request, f"Error importing fire distinguisher data: {error_message}")
             else:

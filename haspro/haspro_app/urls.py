@@ -12,6 +12,11 @@ urlpatterns = [
 	path('owners/<int:pk>/edit/', views.buildingowner_edit, name='buildingowner-edit'),
 	path('owners/<int:pk>/delete/', views.buildingowner_delete, name='buildingowner-delete'),
     
+	path('managers/', views.buildingmanager_list, name='buildingmanager-list'),
+    path('managers/create/', views.buildingmanager_create, name='buildingmanager-create'),
+	path('managers/<int:pk>/edit/', views.buildingmanager_edit, name='buildingmanager-edit'),
+	path('managers/<int:pk>/delete/', views.buildingmanager_delete, name='buildingmanager-delete'),
+    
 	path('buildings/', views.building_list, name='building-list'),
     path('buildings/create/', views.building_create, name='building-create'),
     path('buildings/<int:pk>/edit/', views.building_edit, name='building-edit'),

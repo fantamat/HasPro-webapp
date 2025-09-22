@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Building Managers</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Phone 2</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for manager in managers %}
+        <tr onclick="window.location.href = `{% url 'haspro_app:buildingmanager-edit' manager.pk %}`;">
+            <td>{{ manager.name }}</td>
+            <td>{{ manager.address }}</td>
+            <td>{{ manager.phone }}</td>
+            <td>{{ manager.phone2|default:"" }}</td>
+            <td>{{ manager.email }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No building managers found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'haspro_app:buildingmanager-create' %}" class="btn-add">Add Building Manager</a>
+{% endblock %}

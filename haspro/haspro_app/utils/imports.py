@@ -1,11 +1,20 @@
 import re
 import numpy as np
 import pandas as pd
+import logging
 
 from ..models import BuildingManager, Building, Firedistinguisher, FiredistinguisherPlacement
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def parse_address(address):
-    address, zip_code_city = address.split(',')
+    adress_split = address.split(',')
+    if len(adress_split) < 2:
+        return address.strip(), '', ''
+    else:
+        address = ','.join(adress_split[:-1])
+        zip_code_city = adress_split[-1]
 
     parts = re.split(r'[^\s\d]+', zip_code_city)
     zipcode = parts[0].strip()
@@ -104,18 +113,23 @@ def import_building_manager_data(file, owner, company):
 
 
 
-def process_firedistinguisher_row(row, company):
+def process_firedistinguisher_row(row, owner, company):
     if row is None or "Výrobní číslo" not in row or pd.isna(row["Výrobní číslo"]):
         return 0
 
     serial_number = str(row["Výrobní číslo"]).strip()
 
     if '/' in serial_number and len(serial_number) > 3:
-        manufactured_year = int(serial_number[serial_number.find('/')+1:serial_number.find('/')+3])
-        if manufactured_year < 50:
-            manufactured_year += 2000
-        else:
-            manufactured_year += 1900
+
+        manufactured_year = serial_number[serial_number.find('/')+1:serial_number.find('/')+3]
+        try:
+            manufactured_year = int(manufactured_year)
+            if manufactured_year < 50:
+                manufactured_year += 2000
+            else:
+                manufactured_year += 1900
+        except ValueError:
+            manufactured_year = None
     else:
         manufactured_year = None
 
@@ -129,7 +143,7 @@ def process_firedistinguisher_row(row, company):
             type=row["Typ"],
             manufacturer=row["Výrobce"],
             serial_number=serial_number,
-            eliminated=(str(row["Vyyřazen"]) != '') or (str(row["Provozuschopný"]).lower() == 'ne'),
+            eliminated=(str(row["Vyřazen"]) != '') or (str(row["Provozuschopný"]).lower() == 'ne'),
             last_inspection=None,
             manufactured_year=manufactured_year,
             last_fullfilment=None,
@@ -141,17 +155,25 @@ def process_firedistinguisher_row(row, company):
         firedistinguisher.kind = row["Druh"]
         firedistinguisher.type = row["Typ"]
         firedistinguisher.manufacturer = row["Výrobce"]
-        firedistinguisher.eliminated = (str(row["Vyyřazen"]) != '') or (str(row["Provozuschopný"]).lower() == 'ne')
+        firedistinguisher.eliminated = (str(row["Vyřazen"]) != '') or (str(row["Provozuschopný"]).lower() == 'ne')
         firedistinguisher.manufactured_year = manufactured_year
         firedistinguisher.save()    
 
     building_id = row["Samospráva"]
-    if type(building_id) is float or type(building_id) is np.int64:
-        building_id = str(int(building_id))
-    
-    building = Building.objects.filter(building_id=building_id, company=company).first()
+    if type(building_id) in [float, np.float64, np.int64, int]:
+        try:
+            building_id = str(int(building_id))
+        except ValueError:
+            logger.error(f"Invalid building ID: {building_id}")
+            building_id = None
+
+    building = Building.objects.filter(building_id=building_id, company=company, owner=owner).first()
 
     if building is not None:
+        if firedistinguisher.get_current_placement() is not None and firedistinguisher.get_current_placement().building == building:
+            return out  # No change in placement
+        
+        # Create new placement
         placement = FiredistinguisherPlacement(
             description=row["Umístění"],
             firedistinguisher=firedistinguisher,
@@ -163,7 +185,7 @@ def process_firedistinguisher_row(row, company):
     return out
 
     
-def import_firedistinguisher_data(file, company):
+def import_firedistinguisher_data(file, owner, company):
     # Logic to import fire distinguisher data from the uploaded file
     # return number of imported records and error message
     if file.name.endswith('.csv'):
@@ -175,13 +197,15 @@ def import_firedistinguisher_data(file, company):
     else:
         return 0, "Unsupported file format. Please upload a CSV or Excel file."
 
-    required_columns = {'Samospráva', 'Umístění', 'Druh', 'Typ', 'Výrobce', 'Výrobní číslo', 'Tlaková zkouška', 'Oprava', 'Vyyřazen', 'Provozuschopný', 'Příští per. zkouška'}
+    required_columns = {'Samospráva', 'Umístění', 'Druh', 'Typ', 'Výrobce', 'Výrobní číslo', 'Tlaková zkouška', 'Oprava', 'Vyřazen', 'Provozuschopný', 'Příští per. zkouška'}
 
     if not required_columns.issubset(df.columns):
-        return 0, "Invalid file format. Required columns are missing. Required columns: " + ", ".join(required_columns)
+        missing = required_columns - set(df.columns)
+        logger.error(f"Missing required columns: {missing}")
+        return 0, "Invalid file format. Required columns are missing. Missing columns: " + ", ".join(missing)
 
     out = 0
     for idx in df.index:
-        out += process_firedistinguisher_row(df.loc[idx], company)
+        out += process_firedistinguisher_row(df.loc[idx], owner, company)
 
     return out, None  # Example return, replace with actual logic

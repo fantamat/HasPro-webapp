@@ -30,7 +30,7 @@
     </thead>
     <tbody>
         {% for placement in placements %}
-        <tr>
+        <tr onclick="window.location.href='{% url 'haspro_app:building-edit' placement.building.pk %}'" style="cursor: pointer;">
             <td>{{ placement.building.building_id }}</td>
             <td>{{ placement.building.get_full_address }}</td>
             <td>{{ placement.description }}</td>
