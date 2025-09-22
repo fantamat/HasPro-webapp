@@ -98,7 +98,7 @@ class FiredistinguisherPlacement(models.Model):
 	
 
 class FiredistinguisherServiceAction(models.Model):
-	action_type = models.CharField(max_length=100)
+	action_type = models.CharField(max_length=100, db_index=True)
 	description = models.CharField(max_length=255)
 	created_at = models.DateTimeField(auto_now_add=True)
 	firedistinguisher = models.ForeignKey(Firedistinguisher, on_delete=models.CASCADE)

@@ -12,6 +12,8 @@ from ..models import (
     FiredistinguisherInspection, 
     Building, 
     FaultPhoto,
+    Firedistinguisher,
+    FiredistinguisherPlacement,
     FiredistinguisherServiceAction,
 )
 
@@ -136,6 +138,68 @@ def _add_fault_records(obj_map, conn):
 
     return num_updated
 
+def _add_new_firedistinguisher(obj_map, conn, company):
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT * FROM Firedistinguisher")
+        records = cursor.fetchall()
+    
+    num_updated = 0
+
+    obj_map["Firedistinguisher"] = {}
+    for record in records:
+        id, kind, type, manufacturer, serial_number, eliminated, last_inspection, manufactured_year, last_fullfilment, managed_by_id = record
+
+
+        if Firedistinguisher.objects.filter(serial_number=serial_number).exists():
+            continue  # Skip existing
+
+        # Create new Firedistinguisher
+        fd = Firedistinguisher(
+            kind=kind,
+            type=type,
+            manufacturer=manufacturer,
+            serial_number=serial_number,
+            eliminated=eliminated,
+            last_inspection=last_inspection,
+            manufactured_year=manufactured_year,
+            last_fullfilment=last_fullfilment,
+            managed_by=company
+        )
+        fd.save()
+
+        obj_map["Firedistinguisher"][id] = fd
+        num_updated += 1
+
+    return num_updated
+
+def _add_firedistinguisher_placements(obj_map, conn):
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT * FROM FiredistinguisherPlacement")
+        records = cursor.fetchall()
+    
+    num_updated = 0
+
+    obj_map["FiredistinguisherPlacement"] = {}
+    for record in records:
+        id, description, created_at, firedistinguisher_id, building_id = record
+
+        if firedistinguisher_id in obj_map["Firedistinguisher"]:
+            firedistinguisher_id = obj_map["Firedistinguisher"].get(firedistinguisher_id).pk
+
+        # Create new FiredistinguisherPlacement
+        fdp = FiredistinguisherPlacement(
+            description=description,
+            created_at=created_at,
+            firedistinguisher_id=firedistinguisher_id,
+            building_id=building_id
+        )
+        fdp.save()
+
+        obj_map["FiredistinguisherPlacement"][id] = fdp
+        num_updated += 1
+
+    return num_updated
+
 
 def _add_firedistinguisher_inspections(obj_map, conn):
     with conn.cursor() as cursor:
@@ -150,6 +214,9 @@ def _add_firedistinguisher_inspections(obj_map, conn):
 
         if inspection_id not in obj_map["InspectionRecord"]:
             raise InspectionImportError(f"Referenced InspectionRecord ID {inspection_id} not found in the imported data.")
+
+        if firedistinguisher_id in obj_map["Firedistinguisher"]:
+            firedistinguisher_id = obj_map["Firedistinguisher"].get(firedistinguisher_id).pk
 
         # Create new FiredistinguisherInspection
         fi = FiredistinguisherInspection(
@@ -213,5 +280,7 @@ def add_inspection(user, company, file):
                 obj_map = {}
                 _add_inspection_record(obj_map, conn, user, company, file)
                 _add_fault_records(obj_map, conn)
+                _add_new_firedistinguisher(obj_map, conn, company)
+                _add_firedistinguisher_placements(obj_map, conn)
                 _add_firedistinguisher_inspections(obj_map, conn)
 

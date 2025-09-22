@@ -2,7 +2,16 @@ import sqlite3
 import io
 import tempfile
 
-from haspro_app.models import Company, BuildingOwner, BuildingManager, Building, Fault, Firedistinguisher, FiredistinguisherPlacement
+from haspro_app.models import (
+    BuildingOwner, 
+    BuildingManager, 
+    Building, 
+    Fault, 
+    PossibleFault,
+    Firedistinguisher, 
+    FiredistinguisherPlacement,
+    FiredistinguisherServiceAction,
+)
 
 def export_project_to_sqlite(company, file_name):
     # Query all related records
@@ -10,8 +19,10 @@ def export_project_to_sqlite(company, file_name):
     managers = BuildingManager.objects.all()
     buildings = Building.objects.filter(company=company)
     faults = Fault.objects.all()
+    possible_faults = PossibleFault.objects.filter(building__in=buildings)
     firedistinguisher = Firedistinguisher.objects.filter(managed_by=company)
     placements = FiredistinguisherPlacement.objects.filter(firedistinguisher__in=firedistinguisher)
+    service_actions = FiredistinguisherServiceAction.objects.filter(firedistinguisher__in=firedistinguisher)
 
     # Create SQLite DB
     conn = sqlite3.connect(file_name)
@@ -62,6 +73,11 @@ def export_project_to_sqlite(company, file_name):
         short_name TEXT,
         description TEXT
     )''')
+    c.execute('''CREATE TABLE possiblefault (
+        id INTEGER PRIMARY KEY,
+        fault INTEGER,
+        building INTEGER
+    )''')
     c.execute('''CREATE TABLE firedistinguisher (
         id INTEGER PRIMARY KEY,
         kind TEXT,
@@ -80,6 +96,13 @@ def export_project_to_sqlite(company, file_name):
         created_at TEXT,
         firedistinguisher INTEGER,
         building INTEGER
+    )''')
+    c.execute('''CREATE TABLE firedistinguisherserviceaction (
+        id INTEGER PRIMARY KEY,
+        action_type TEXT,
+        description TEXT,
+        created_at TEXT,
+        firedistinguisher INTEGER
     )''')
     c.execute('''CREATE TABLE files (
               id INTEGER PRIMARY KEY,
@@ -100,10 +123,14 @@ def export_project_to_sqlite(company, file_name):
         c.execute('INSERT INTO building VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.building_id, obj.address, obj.city, obj.zipcode, obj.note, obj.company_id, obj.owner_id, obj.manager_id])
     for obj in faults:
         c.execute('INSERT INTO fault VALUES (?, ?, ?)', [obj.id, obj.short_name, obj.description])
+    for obj in possible_faults:
+        c.execute('INSERT INTO possiblefault VALUES (?, ?, ?)', [obj.id, obj.fault_id, obj.building_id])
     for obj in firedistinguisher:
         c.execute('INSERT INTO firedistinguisher VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.kind, obj.type, obj.manufacturer, obj.serial_number, int(obj.eliminated), str(obj.last_inspection), str(obj.manufactured_year), str(obj.last_fullfilment), obj.managed_by_id])
     for obj in placements:
         c.execute('INSERT INTO firedistinguisherplacement VALUES (?, ?, ?, ?, ?)', [obj.id, obj.description, str(obj.created_at), obj.firedistinguisher_id, obj.building_id])
+    for obj in service_actions:
+        c.execute('INSERT INTO firedistinguisherserviceaction VALUES (?, ?, ?, ?, ?)', [obj.id, obj.action_type, obj.description, str(obj.created_at), obj.firedistinguisher_id])
 
     # Insert company logo file into files table if logo exists
     if company.logo:
