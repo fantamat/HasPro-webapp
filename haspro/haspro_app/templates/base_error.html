@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="error-container">
+    <h1>Error {% block title %}{{ status_code }}{% endblock %}</h1>
+    <p>{% block message %}{{ message }}{% endblock %}</p>
+</div>
+{% endblock %}

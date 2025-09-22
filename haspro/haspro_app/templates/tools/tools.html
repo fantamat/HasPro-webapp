@@ -41,24 +41,24 @@
     <button type="submit" class="btn">Import</button>
 </form>
 
-<form method="post" action="" enctype="multipart/form-data">
-    <h2>Export my company data</h2>
+<form method="get" action="{% url 'haspro_app:export-db-dump' %}">
+    <h2>Download Database Snapshot</h2>
+    <p>
+        Download a complete snapshot of your company's database for mobile app synchronization.
+    </p>
+    <button type="submit" class="btn">Download DB Snapshot</button>
+</form>
 
+<form method="post" action="{% url 'haspro_app:upload-inspection-records' %}" enctype="multipart/form-data">
+    <h2>Upload Inspection Records</h2>
     {% csrf_token %}
     <p>
-        <label for="owner" class="form-label">Select Owner</label>
-        <select class="form-select" id="owner" name="owner">
-            {% for owner in owners %}
-                <option value="{{ owner.id }}">{{ owner.name }}</option>
-            {% endfor %}
-        </select>
+        <label for="inspection_file" class="form-label">Choose inspection file to upload</label>
+        <input type="file" class="form-control" id="inspection_file" name="file">
     </p>
-    <p>
-        <label for="file" class="form-label">Choose file to import</label>
-        <input type="file" class="form-control" id="file" name="file">
-    </p>
-    <button type="submit" class="btn">Import</button>
+    <button type="submit" class="btn">Upload Inspection Records</button>
 </form>
+
 
 
 {% endblock %}

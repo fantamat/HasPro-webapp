@@ -1,3 +1,4 @@
+import datetime
 import re
 import numpy as np
 import pandas as pd
@@ -112,6 +113,27 @@ def import_building_manager_data(file, owner, company):
 
 
 
+def _eliminated(row):
+    if "Vyřazen" in row and row["Vyřazen"] is not np.nan and str(row["Vyřazen"]) != '':
+        return True
+    if "Provozuschopný" in row and row["Provozuschopný"] is not np.nan and str(row["Provozuschopný"]).lower() == 'ne':
+        return True
+    return False
+
+
+def _next_inspection(row):
+    if "Příští per. zkouška" in row and row["Příští per. zkouška"] is not np.nan and str(row["Příští per. zkouška"]) != '':
+        if type(row["Příští per. zkouška"]) is datetime.datetime:
+            return row["Příští per. zkouška"].date()
+        else:
+            try:
+                return pd.to_datetime(str(row["Příští per. zkouška"]), format='%Y/%m').date()
+            except Exception as e:
+                logger.error(f"Error parsing next inspection date: {e}")
+                return None
+    return None
+
+
 
 def process_firedistinguisher_row(row, owner, company):
     if row is None or "Výrobní číslo" not in row or pd.isna(row["Výrobní číslo"]):
@@ -143,11 +165,12 @@ def process_firedistinguisher_row(row, owner, company):
             type=row["Typ"],
             manufacturer=row["Výrobce"],
             serial_number=serial_number,
-            eliminated=(str(row["Vyřazen"]) != '') or (str(row["Provozuschopný"]).lower() == 'ne'),
+            eliminated=_eliminated(row),
             last_inspection=None,
             manufactured_year=manufactured_year,
             last_fullfilment=None,
-            managed_by=company
+            managed_by=company,
+            next_inspection=_next_inspection(row)
         )
         firedistinguisher.save()
         out += 1
@@ -155,9 +178,10 @@ def process_firedistinguisher_row(row, owner, company):
         firedistinguisher.kind = row["Druh"]
         firedistinguisher.type = row["Typ"]
         firedistinguisher.manufacturer = row["Výrobce"]
-        firedistinguisher.eliminated = (str(row["Vyřazen"]) != '') or (str(row["Provozuschopný"]).lower() == 'ne')
+        firedistinguisher.eliminated = _eliminated(row)
         firedistinguisher.manufactured_year = manufactured_year
-        firedistinguisher.save()    
+        firedistinguisher.next_inspection = _next_inspection(row)
+        firedistinguisher.save()
 
     building_id = row["Samospráva"]
     if type(building_id) in [float, np.float64, np.int64, int]:

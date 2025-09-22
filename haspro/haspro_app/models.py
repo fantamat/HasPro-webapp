@@ -75,10 +75,9 @@ class Firedistinguisher(models.Model):
 	manufacturer = models.CharField(max_length=100)
 	serial_number = models.CharField(max_length=100)
 	eliminated = models.BooleanField(default=False)
-	last_inspection = models.DateField(null=True, blank=True)
 	manufactured_year = models.IntegerField(null=True, blank=True)
-	last_fullfilment = models.DateField(null=True, blank=True)
 	managed_by = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True)
+	next_inspection = models.DateField(null=True, blank=True)
 
 	def __str__(self):
 		return f"{self.kind} {self.serial_number}"

@@ -3,6 +3,7 @@ import io
 import tempfile
 
 from haspro_app.models import (
+    Company,
     BuildingOwner, 
     BuildingManager, 
     Building, 
@@ -85,10 +86,9 @@ def export_project_to_sqlite(company, file_name):
         manufacturer TEXT,
         serial_number TEXT,
         eliminated INTEGER,
-        last_inspection TEXT,
         manufactured_year TEXT,
-        last_fullfilment TEXT,
-        managed_by INTEGER
+        managed_by INTEGER,
+        next_inspection TEXT
     )''')
     c.execute('''CREATE TABLE firedistinguisherplacement (
         id INTEGER PRIMARY KEY,
@@ -126,7 +126,7 @@ def export_project_to_sqlite(company, file_name):
     for obj in possible_faults:
         c.execute('INSERT INTO possiblefault VALUES (?, ?, ?)', [obj.id, obj.fault_id, obj.building_id])
     for obj in firedistinguisher:
-        c.execute('INSERT INTO firedistinguisher VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.kind, obj.type, obj.manufacturer, obj.serial_number, int(obj.eliminated), str(obj.last_inspection), str(obj.manufactured_year), str(obj.last_fullfilment), obj.managed_by_id])
+        c.execute('INSERT INTO firedistinguisher VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.kind, obj.type, obj.manufacturer, obj.serial_number, int(obj.eliminated), str(obj.manufactured_year), obj.managed_by_id, str(obj.next_inspection)])
     for obj in placements:
         c.execute('INSERT INTO firedistinguisherplacement VALUES (?, ?, ?, ?, ?)', [obj.id, obj.description, str(obj.created_at), obj.firedistinguisher_id, obj.building_id])
     for obj in service_actions:

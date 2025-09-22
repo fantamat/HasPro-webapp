@@ -42,4 +42,29 @@
     </tbody>
 </table>
 {% endif %}
+
+{% if not create and actions %}
+<h3>Service Actions</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Action Type</th>
+            <th>Description</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for action in actions %}
+        <tr>
+            <td>{{ action.get_action_type_display }}</td>
+            <td>{{ action.description }}</td>
+            <td>{{ action.created_at }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No service actions found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
 {% endblock %}

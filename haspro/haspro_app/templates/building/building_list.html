@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>Buildings</h2>
+<div class="filter">
+    <label class="filter-option" for="firedist" onclick="var checkbox = document.getElementById('firedist'); checkbox.checked = !checkbox.checked; document.cookie='firedist=' + (checkbox.checked ? '1' : ''); location.reload();">
+        <input type="checkbox" id="firedist" name="firedist" value="1" {% if request.COOKIES.firedist %}checked{% endif %}>
+        Show only with fire extinguishers
+    </label>
+</div>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -8,7 +14,6 @@
             <th>Address</th>
             <th>City</th>
             <th>Zipcode</th>
-            <th>Company</th>
             <th>Owner</th>
             <th>Manager</th>
             <th>Note</th>
@@ -21,7 +26,6 @@
             <td>{{ building.address }}</td>
             <td>{{ building.city }}</td>
             <td>{{ building.zipcode }}</td>
-            <td>{{ building.company }}</td>
             <td>{{ building.owner }}</td>
             <td>{{ building.manager }}</td>
             <td>{{ building.note }}</td>

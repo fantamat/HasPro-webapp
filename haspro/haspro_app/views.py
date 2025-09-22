@@ -1,5 +1,6 @@
 
 from django.shortcuts import render, redirect
+from urllib3 import request
 from .models import Building, BuildingOwner, BuildingManager, Firedistinguisher, FiredistinguisherPlacement, Company
 from .forms.building_form import BuildingForm
 from .forms.owner_form import BuildingOwnerForm
@@ -15,13 +16,36 @@ import logging
 import traceback
 from django.db.models import Max
 
+
 logger = logging.getLogger(__name__)
 
 # _______________________________ Building _______________________________
 
 
+def company_decorator(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        company = Company.objects.filter(project=request.user.current_project).first()
+        if company:
+            request.company = company
+        return view_func(request, *args, **kwargs)
+        
+    return _wrapped_view
+
+
+@company_decorator
 def building_list(request):
-    buildings = Building.objects.all()
+    buildings = Building.objects.filter(company=request.company).order_by("building_id").all()
+
+    if request.COOKIES.get('firedist'):
+        building_with_firedist_placed = (
+            FiredistinguisherPlacement.objects
+            .filter(firedistinguisher__managed_by=request.company)
+            .values('firedistinguisher')
+            .annotate(latest_id=Max('id'))
+            .values_list('building', flat=True)
+        )
+        buildings = buildings.filter(id__in=building_with_firedist_placed)
+        
     return render(request, 'building/building_list.html', {'buildings': buildings})
 
 
@@ -47,15 +71,22 @@ def building_edit(request, pk):
         form = BuildingForm(instance=building)
 
     # Get the latest placement for each firedistinguisher in the building
-    latest_placements_ids = (
+    latest_placements = (
         FiredistinguisherPlacement.objects
         .filter(building=building)
         .values('firedistinguisher')
         .annotate(latest_id=Max('id'))
-        .values_list('latest_id', flat=True)
     )
 
-    firedistinguishers = Firedistinguisher.objects.filter(id__in=latest_placements_ids)
+    # Get the actual placement objects
+    latest_placement_objects = FiredistinguisherPlacement.objects.filter(
+        id__in=[placement['latest_id'] for placement in latest_placements]
+    )
+
+    # Get the fire extinguishers from these placements
+    firedistinguishers = Firedistinguisher.objects.filter(
+        id__in=latest_placement_objects.values_list('firedistinguisher', flat=True)
+    )
 
     return render(request, 'building/building_form.html', {'form': form, 'create': False, 'firedistinguishers': firedistinguishers})
 
@@ -171,7 +202,9 @@ def firedistinguisher_edit(request, pk):
     
     placements = FiredistinguisherPlacement.objects.filter(firedistinguisher=firedistinguisher).order_by('-created_at')
 
-    return render(request, 'firedistinguisher/firedistinguisher_form.html', {'form': form, 'create': False, 'placements': placements})
+    actions = firedistinguisher.firedistinguisherserviceaction_set.all().order_by('-created_at')
+
+    return render(request, 'firedistinguisher/firedistinguisher_form.html', {'form': form, 'create': False, 'placements': placements, 'actions': actions})
 
 
 def firedistinguisher_delete(request, pk):
@@ -183,28 +216,27 @@ def firedistinguisher_delete(request, pk):
 
 # _______________________________ Data Imports _______________________________
 
+@company_decorator
 def tools_view(request):
-    company = Company.objects.filter(project=request.user.current_project).first()
-    return render(request, 'tools/tools.html', {'owners': BuildingOwner.objects.filter(managed_by=company).all()})
+    return render(request, 'tools/tools.html', {'owners': BuildingOwner.objects.filter(managed_by=request.company).all()})
 
 
-
+@company_decorator
 def import_building_manager_list(request):
     if request.method == 'POST':
         file = request.FILES.get('file')
         if file:
-            company = Company.objects.filter(project=request.user.current_project).first()
             if 'owner' in request.POST:
                 try:
-                    owner = BuildingOwner.objects.get(id=int(request.POST['owner']), managed_by=company)
+                    owner = BuildingOwner.objects.get(id=int(request.POST['owner']), managed_by=request.company)
                 except BuildingOwner.DoesNotExist:
                     messages.error(request, f"Error importing building manager data: Selected owner does not exist.")
                     return redirect('haspro_app:tools-view')
             else:
                 messages.error(request, f"Error importing building manager data: No owner selected.")
                 return redirect('haspro_app:tools-view')
-                
-            num_imported, error_message = import_building_manager_data(file, owner, company)
+
+            num_imported, error_message = import_building_manager_data(file, owner, request.company)
             if error_message:
                 messages.error(request, f"Error importing building manager data: {error_message}")
             else:
@@ -215,15 +247,14 @@ def import_building_manager_list(request):
 
     return redirect('haspro_app:tools-view')
 
-
+@company_decorator
 def import_firedistinguisher_list(request):
     if request.method == 'POST':
         file = request.FILES.get('file')
         if file:
-            company = Company.objects.filter(project=request.user.current_project).first()
             if 'owner' in request.POST:
                 try:
-                    owner = BuildingOwner.objects.get(id=int(request.POST['owner']), managed_by=company)
+                    owner = BuildingOwner.objects.get(id=int(request.POST['owner']), managed_by=request.company)
                 except BuildingOwner.DoesNotExist:
                     messages.error(request, f"Error importing fire distinguisher data: Selected owner does not exist.")
                     return redirect('haspro_app:tools-view')
@@ -231,7 +262,7 @@ def import_firedistinguisher_list(request):
                 messages.error(request, f"Error importing fire distinguisher data: No owner selected.")
                 return redirect('haspro_app:tools-view')
 
-            num_imported, error_message = import_firedistinguisher_data(file, owner, company)
+            num_imported, error_message = import_firedistinguisher_data(file, owner, request.company)
             if error_message:
                 messages.error(request, f"Error importing fire distinguisher data: {error_message}")
             else:
@@ -259,6 +290,7 @@ def export_reports_for_owner(request, owner_id):
 
 # _______________________________ Mobile app interface _______________________________
 
+@company_decorator
 def get_db_snapshot(request):
     # Create a current project snapshot for the user
     if not request.user.is_authenticated:
@@ -266,10 +298,9 @@ def get_db_snapshot(request):
 
     # Logic to create a snapshot
     try:
-        company = Company.objects.filter(project=request.user.current_project).first()
-        if not company:
+        if not request.company:
             return render(request, '404.html', status=404)
-        buffer = create_snapshot_file(company)
+        buffer = create_snapshot_file(request.company)
     except Exception as e:
         logger.error(f"Error creating snapshot for user {request.user.id}: {e} Traceback: {traceback.format_exc()}", exc_info=True)
         return render(request, '500.html', status=500)
@@ -277,17 +308,17 @@ def get_db_snapshot(request):
     return FileResponse(buffer, as_attachment=True, filename='db_snapshot.bin')
 
 
+@company_decorator
 def upload_inspection_records(request):
     # Handle uploaded inspection data from mobile app
     if request.method == 'POST':
         file = request.FILES.get('file')
         if file:
-            company = Company.objects.filter(project=request.user.current_project).first()
-            if not company:
+            if not request.company:
                 messages.error(request, "Error updating inspection records: No company found.")
                 return redirect('haspro_app:tools-view')
 
-            num_updated, error_message = add_inspection(user, company, file)
+            num_updated, error_message = add_inspection(request.user, request.company, file)
             if error_message:
                 messages.error(request, f"Error updating inspection records: {error_message}")
             else:

@@ -9,9 +9,8 @@
             <th>Manufacturer</th>
             <th>Serial Number</th>
             <th>Eliminated</th>
-            <th>Last Inspection</th>
             <th>Manufactured At</th>
-            <th>Last Fullfilment</th>
+            <th>Next Inspection</th>
             <th>Current Placement</th>
         </tr>
     </thead>
@@ -23,9 +22,8 @@
             <td>{{ fd.manufacturer }}</td>
             <td>{{ fd.serial_number }}</td>
             <td>{{ fd.eliminated|yesno:"Yes,No" }}</td>
-            <td>{{ fd.last_inspection }}</td>
             <td>{{ fd.manufactured_year }}</td>
-            <td>{{ fd.last_fullfilment }}</td>
+            <td>{{ fd.next_inspection }}</td>
             <td>{{ fd.get_current_placement.building }}</td>
         </tr>
         {% empty %}
