@@ -15,16 +15,14 @@ from django.contrib import messages
 import logging
 import traceback
 from django.db.models import Max
+from users.utils import project_permission_decorator
 
 
 logger = logging.getLogger(__name__)
 
-# _______________________________ Building _______________________________
-
-
 def company_decorator(view_func):
     def _wrapped_view(request, *args, **kwargs):
-        company = Company.objects.filter(project=request.user.current_project).first()
+        company = Company.objects.filter(project=request.project).first()
         if company:
             request.company = company
         return view_func(request, *args, **kwargs)
@@ -32,6 +30,19 @@ def company_decorator(view_func):
     return _wrapped_view
 
 
+
+@project_permission_decorator()
+@company_decorator
+def home(request):
+    if not request.user or not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        return render(request, 'home.html', {'user': request.user, 'company': request.company, 'permissions': request.project_permission})
+
+
+# _______________________________ Building _______________________________
+
+@project_permission_decorator(require_view=True)
 @company_decorator
 def building_list(request):
     buildings = Building.objects.filter(company=request.company).order_by("building_id").all()
@@ -50,7 +61,7 @@ def building_list(request):
 
     return render(request, 'building/building_list.html', {'buildings': buildings, 'faults': faults})
 
-
+@project_permission_decorator(require_admin=True)
 def building_create(request):
     if request.method == 'POST':
         form = BuildingForm(request.POST)
@@ -62,6 +73,7 @@ def building_create(request):
     return render(request, 'building/building_form.html', {'form': form, 'create': True})
 
 
+@project_permission_decorator(require_edit=True)
 def building_edit(request, pk):
     building = Building.objects.get(pk=pk)
     if request.method == 'POST':
@@ -97,6 +109,7 @@ def building_edit(request, pk):
     return render(request, 'building/building_form.html', {'form': form, 'create': False, 'firedistinguishers': firedistinguishers, 'possible_faults': possible_faults, 'additional_faults': additional_faults})
 
 
+@project_permission_decorator(require_edit=True)
 def add_possible_fault(request, pk):
     building = Building.objects.get(pk=pk)
     if request.method == 'POST':
@@ -124,6 +137,7 @@ def add_possible_fault(request, pk):
     return redirect('haspro_app:building-edit', pk=pk)
 
 
+@project_permission_decorator(require_admin=True)
 def building_delete(request, pk):
     building = Building.objects.get(pk=pk)
     if request.method == 'POST':
@@ -134,10 +148,12 @@ def building_delete(request, pk):
 
 # _______________________________ Building Owner _______________________________
 
+@project_permission_decorator(require_view=True)
 def buildingowner_list(request):
     owners = BuildingOwner.objects.all()
     return render(request, 'buildingowner/buildingowner_list.html', {'owners': owners})
 
+@project_permission_decorator(require_admin=True)
 def buildingowner_create(request):
     if request.method == 'POST':
         form = BuildingOwnerForm(request.POST)
@@ -148,19 +164,30 @@ def buildingowner_create(request):
         form = BuildingOwnerForm()
     return render(request, 'buildingowner/buildingowner_form.html', {'form': form, 'create': True})
 
+
+@project_permission_decorator(require_view=True)
 def buildingowner_edit(request, pk):
     owner = BuildingOwner.objects.get(pk=pk)
     if request.method == 'POST':
-        form = BuildingOwnerForm(request.POST, instance=owner)
-        if form.is_valid():
-            form.save()
-            return redirect('haspro_app:buildingowner-list')
+        buildingowner_edit_post(request, owner)
     else:
         form = BuildingOwnerForm(instance=owner)
 
     managed_buildings = Building.objects.filter(owner=owner).all()
     return render(request, 'buildingowner/buildingowner_form.html', {'form': form, 'create': False, 'buildings': managed_buildings})
 
+@project_permission_decorator(require_admin=True)
+def buildingowner_edit_post(request, owner):
+    form = BuildingOwnerForm(request.POST, instance=owner)
+    if form.is_valid():
+        form.save()
+        return redirect('haspro_app:buildingowner-list')
+    
+    managed_buildings = Building.objects.filter(owner=owner).all()
+    return render(request, 'buildingowner/buildingowner_form.html', {'form': form, 'create': False, 'buildings': managed_buildings})
+
+
+@project_permission_decorator(require_admin=True)
 def buildingowner_delete(request, pk):
     owner = BuildingOwner.objects.get(pk=pk)
     if request.method == 'POST':
@@ -171,10 +198,12 @@ def buildingowner_delete(request, pk):
 
 # _______________________________ Building Manager _______________________________
 
+@project_permission_decorator(require_view=True)
 def buildingmanager_list(request):
     managers = BuildingManager.objects.all()
     return render(request, 'buildingmanager/buildingmanager_list.html', {'managers': managers})
 
+@project_permission_decorator(require_admin=True)
 def buildingmanager_create(request):
     if request.method == 'POST':
         form = BuildingManagerForm(request.POST)
@@ -185,6 +214,7 @@ def buildingmanager_create(request):
         form = BuildingManagerForm()
     return render(request, 'buildingmanager/buildingmanager_form.html', {'form': form, 'create': True})
 
+@project_permission_decorator(require_admin=True)
 def buildingmanager_edit(request, pk):
     manager = BuildingManager.objects.get(pk=pk)
     if request.method == 'POST':
@@ -198,6 +228,7 @@ def buildingmanager_edit(request, pk):
     managed_buildings = Building.objects.filter(manager=manager).all()
     return render(request, 'buildingmanager/buildingmanager_form.html', {'form': form, 'create': False, 'buildings': managed_buildings})
 
+@project_permission_decorator(require_admin=True)
 def buildingmanager_delete(request, pk):
     manager = BuildingManager.objects.get(pk=pk)
     if request.method == 'POST':
@@ -208,11 +239,12 @@ def buildingmanager_delete(request, pk):
 
 # _______________________________ Fire Distinguisher _______________________________
 
+@project_permission_decorator(require_view=True)
 def firedistinguisher_list(request):
     firedistinguisher_list = Firedistinguisher.objects.all()
     return render(request, 'firedistinguisher/firedistinguisher_list.html', {'firedistinguisher_list': firedistinguisher_list})
 
-
+@project_permission_decorator(require_edit=True)
 def firedistinguisher_create(request):
     if request.method == 'POST':
         form = FiredistinguisherForm(request.POST)
@@ -223,7 +255,7 @@ def firedistinguisher_create(request):
         form = FiredistinguisherForm()
     return render(request, 'firedistinguisher/firedistinguisher_form.html', {'form': form, 'create': True})
 
-
+@project_permission_decorator(require_edit=True)
 def firedistinguisher_edit(request, pk):
     firedistinguisher = Firedistinguisher.objects.get(pk=pk)
     if request.method == 'POST':
@@ -241,6 +273,7 @@ def firedistinguisher_edit(request, pk):
     return render(request, 'firedistinguisher/firedistinguisher_form.html', {'form': form, 'create': False, 'placements': placements, 'actions': actions})
 
 
+@project_permission_decorator(require_admin=True)
 def firedistinguisher_delete(request, pk):
     firedistinguisher = Firedistinguisher.objects.get(pk=pk)
     if request.method == 'POST':
@@ -250,11 +283,13 @@ def firedistinguisher_delete(request, pk):
 
 # _______________________________ Data Imports _______________________________
 
+@project_permission_decorator(require_admin=True)
 @company_decorator
 def tools_view(request):
     return render(request, 'tools/tools.html', {'owners': BuildingOwner.objects.filter(managed_by=request.company).all()})
 
 
+@project_permission_decorator(require_admin=True)
 @company_decorator
 def import_building_manager_list(request):
     if request.method == 'POST':
@@ -281,6 +316,7 @@ def import_building_manager_list(request):
 
     return redirect('haspro_app:tools-view')
 
+@project_permission_decorator(require_admin=True)        
 @company_decorator
 def import_firedistinguisher_list(request):
     if request.method == 'POST':
@@ -310,12 +346,14 @@ def import_firedistinguisher_list(request):
 
 # _______________________________ Data Exports _______________________________
 
-
+@project_permission_decorator(require_admin=True)
+@company_decorator
 def set_export_template(request):
     # Placeholder for setting export template logic
     pass
 
-
+@project_permission_decorator(require_admin=True)
+@company_decorator
 def export_reports_for_owner(request, owner_id):
     # Placeholder for exporting data by owner logic
     pass
@@ -324,24 +362,27 @@ def export_reports_for_owner(request, owner_id):
 
 # _______________________________ Mobile app interface _______________________________
 
+@project_permission_decorator(require_view=True)
 @company_decorator
-def get_db_snapshot(request):
-    # Create a current project snapshot for the user
-    if not request.user.is_authenticated:
-        render(request, '403.html', status=403)
+def get_db_snapshot(request):    
 
     # Logic to create a snapshot
     try:
         if not request.company:
-            return render(request, '404.html', status=404)
+            return render(request, '404.html', {
+                'error_message': "No company found for the current project."
+            }, status=404)
         buffer = create_snapshot_file(request.company)
     except Exception as e:
         logger.error(f"Error creating snapshot for user {request.user.id}: {e} Traceback: {traceback.format_exc()}", exc_info=True)
-        return render(request, '500.html', status=500)
+        return render(request, '500.html', {
+            'error_message': "Error creating database snapshot."
+        }, status=500)
 
     return FileResponse(buffer, as_attachment=True, filename='db_snapshot.bin')
 
 
+@project_permission_decorator(require_edit=True)
 @company_decorator
 def upload_inspection_records(request):
     # Handle uploaded inspection data from mobile app

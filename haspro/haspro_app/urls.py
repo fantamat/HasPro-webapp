@@ -7,6 +7,8 @@ app_name = 'haspro_app'
 from . import views
 
 urlpatterns = [
+    path('', views.home, name='home'),
+
 	path('owners/', views.buildingowner_list, name='buildingowner-list'),
     path('owners/create/', views.buildingowner_create, name='buildingowner-create'),
 	path('owners/<int:pk>/edit/', views.buildingowner_edit, name='buildingowner-edit'),

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Welcome to HasPro</h1>
+
+<div class="info-grid">
+    <!-- User Information -->
+    <div class="info-card">
+        <h3>User Information</h3>
+        <table class="info-table">
+            <tr>
+                <td><strong>Username:</strong></td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <td><strong>Email:</strong></td>
+                <td>{{ user.email|default:"Not provided" }}</td>
+            </tr>
+            <tr>
+                <td><strong>First Name:</strong></td>
+                <td>{{ user.first_name|default:"Not provided" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Last Name:</strong></td>
+                <td>{{ user.last_name|default:"Not provided" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Phone:</strong></td>
+                <td>{{ user.phone|default:"Not provided" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Technician ID:</strong></td>
+                <td>{{ user.technicianID|default:"Not assigned" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Current Project:</strong></td>
+                <td>{{ user.current_project.name|default:"No project assigned" }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Project Permissions -->
+    <div class="info-card">
+        <h3>Project Permissions</h3>
+        {% if permissions %}
+            <table class="info-table">
+                <tr>
+                    <td><strong>Project:</strong></td>
+                    <td>{{ permissions.project.name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Can View:</strong></td>
+                    <td>
+                        <span class="permission-badge {% if permissions.can_view %}granted{% else %}denied{% endif %}">
+                            {% if permissions.can_view %}✓ Yes{% else %}✗ No{% endif %}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Can Edit:</strong></td>
+                    <td>
+                        <span class="permission-badge {% if permissions.can_edit %}granted{% else %}denied{% endif %}">
+                            {% if permissions.can_edit %}✓ Yes{% else %}✗ No{% endif %}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Is Admin:</strong></td>
+                    <td>
+                        <span class="permission-badge {% if permissions.is_admin %}granted{% else %}denied{% endif %}">
+                            {% if permissions.is_admin %}✓ Yes{% else %}✗ No{% endif %}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Added:</strong></td>
+                    <td>{{ permissions.added_at|date:"M j, Y" }}</td>
+                </tr>
+            </table>
+        {% else %}
+            <p class="no-data">No project permissions found.</p>
+        {% endif %}
+    </div>
+
+    <!-- Company Information -->
+    <div class="info-card">
+        <h3>Company Information</h3>
+        {% if company %}
+            <table class="info-table">
+                <tr>
+                    <td><strong>Name:</strong></td>
+                    <td>{{ company.name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Address:</strong></td>
+                    <td>{{ company.address }}</td>
+                </tr>
+                <tr>
+                    <td><strong>City:</strong></td>
+                    <td>{{ company.city }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Zip Code:</strong></td>
+                    <td>{{ company.zipcode }}</td>
+                </tr>
+                <tr>
+                    <td><strong>IČO:</strong></td>
+                    <td>{{ company.ico }}</td>
+                </tr>
+                <tr>
+                    <td><strong>DIČ:</strong></td>
+                    <td>{{ company.dic }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Logo:</strong></td>
+                    <td>
+                        {% if company.logo %}
+                            <img src="{{ company.logo.url }}" alt="Company Logo" class="company-logo-small">
+                        {% else %}
+                            No logo uploaded
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        {% else %}
+            <p class="no-data">No company information available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<p class="welcome-message">Use the navigation menu to manage building owners, buildings, fire distinguishers, and tools.</p>
+
+{% endblock %}  

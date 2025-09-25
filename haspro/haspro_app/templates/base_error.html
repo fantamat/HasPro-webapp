@@ -3,5 +3,12 @@
 <div class="error-container">
     <h1>Error {% block title %}{{ status_code }}{% endblock %}</h1>
     <p>{% block message %}{{ message }}{% endblock %}</p>
+    {% if error_message %}
+    <p>{{ error_message }}</p>
+    {% endif %}
+    {% if debug_info %}
+    <pre class="debug-info">{{ debug_info }}</pre>
+    {% endif %}
+    <p><a href="{% url 'haspro_app:home' %}">Return to Home Page</a></p>
 </div>
 {% endblock %}
