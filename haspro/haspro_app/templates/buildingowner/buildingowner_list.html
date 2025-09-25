@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
-<h2>Building Owners</h2>
+<h2>{% trans "Building Owners" %}</h2>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>Zipcode</th>
-            <th>IČO</th>
-            <th>DIČ</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Address" %}</th>
+            <th>{% trans "City" %}</th>
+            <th>{% trans "ZIP Code" %}</th>
+            <th>{% trans "IČO" %}</th>
+            <th>{% trans "DIČ" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -23,10 +24,10 @@
             <td>{{ owner.dic }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="6">No owners found.</td></tr>
+        <tr><td colspan="6">{% trans "No owners found." %}</td></tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'haspro_app:buildingowner-create' %}" class="btn-add">Add Owner</a>
+<a href="{% url 'haspro_app:buildingowner-create' %}" class="btn-add">{% trans "Add Owner" %}</a>
 
 {% endblock %}

@@ -92,3 +92,5 @@ htmlcov/
 # Node (if using any frontend build tools)
 node_modules/
 npm-debug.log
+
+*.mo

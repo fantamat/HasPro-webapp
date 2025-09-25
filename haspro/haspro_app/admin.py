@@ -1,15 +1,31 @@
 from django.contrib import admin
-from .models import Company, BuildingOwner, BuildingManager, Building, Fault, Firedistinguisher, FiredistinguisherPlacement
+from .models import (
+    Company, 
+    BuildingOwner, 
+    BuildingManager, 
+    Building, 
+    Fault, 
+    Firedistinguisher, 
+    FiredistinguisherPlacement,
+    FiredistinguisherServiceAction,
+    InspectionRecord,
+    FaultInspection,
+    FaultPhoto
+)
 
 
 REGISTERED_MODELS = [
-    Company,
-    BuildingOwner,
-    BuildingManager,
-    Building,
-    Fault,
-    Firedistinguisher,
+    Company, 
+    BuildingOwner, 
+    BuildingManager, 
+    Building, 
+    Fault, 
+    Firedistinguisher, 
     FiredistinguisherPlacement,
+    FiredistinguisherServiceAction,
+    InspectionRecord,
+    FaultInspection,
+    FaultPhoto
 ]
 
 SKIP_FIELDS = {

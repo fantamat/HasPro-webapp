@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 
 
 <form method="post" action="{% url 'haspro_app:import-building-manager-list' %}" enctype="multipart/form-data">
-    <h2>Import table with buildings with its managers</h2>
+    <h2>{% trans "Import table with buildings with its managers" %}</h2>
     {% csrf_token %}
     <p>
-        <label for="owner" class="form-label">Select Owner</label>
+        <label for="owner" class="form-label">{% trans "Select Owner" %}</label>
         <select class="form-select" id="owner" name="owner">
             {% for owner in owners %}
                 <option value="{{ owner.id }}">{{ owner.name }}</option>
@@ -14,20 +15,20 @@
         </select>
     </p>
     <p>
-        <label for="file" class="form-label">Choose file to import</label>
+        <label for="file" class="form-label">{% trans "Choose file to import" %}</label>
         <input type="file" class="form-control" id="file" name="file">
     </p>
-    <button type="submit" class="btn">Import</button>
+    <button type="submit" class="btn">{% trans "Import" %}</button>
 </form>
 
 
 
 <form method="post" action="{% url 'haspro_app:import-firedistinguisher-list' %}" enctype="multipart/form-data">
-    <h2>Import table with fire distinguishers</h2>
+    <h2>{% trans "Import table with fire extinguishers" %}</h2>
 
     {% csrf_token %}
     <p>
-        <label for="owner" class="form-label">Select Owner</label>
+        <label for="owner" class="form-label">{% trans "Select Owner" %}</label>
         <select class="form-select" id="owner" name="owner">
             {% for owner in owners %}
                 <option value="{{ owner.id }}">{{ owner.name }}</option>
@@ -35,28 +36,28 @@
         </select>
     </p>
     <p>
-        <label for="file" class="form-label">Choose file to import</label>
+        <label for="file" class="form-label">{% trans "Choose file to import" %}</label>
         <input type="file" class="form-control" id="file" name="file">
     </p>
-    <button type="submit" class="btn">Import</button>
+    <button type="submit" class="btn">{% trans "Import" %}</button>
 </form>
 
 <form method="get" action="{% url 'haspro_app:export-db-dump' %}">
-    <h2>Download Database Snapshot</h2>
+    <h2>{% trans "Download Database Snapshot" %}</h2>
     <p>
-        Download a complete snapshot of your company's database for mobile app synchronization.
+        {% trans "Download a complete snapshot of your company's database for mobile app synchronization." %}
     </p>
-    <button type="submit" class="btn">Download DB Snapshot</button>
+    <button type="submit" class="btn">{% trans "Download DB Snapshot" %}</button>
 </form>
 
 <form method="post" action="{% url 'haspro_app:upload-inspection-records' %}" enctype="multipart/form-data">
-    <h2>Upload Inspection Records</h2>
+    <h2>{% trans "Upload Inspection Records" %}</h2>
     {% csrf_token %}
     <p>
-        <label for="inspection_file" class="form-label">Choose inspection file to upload</label>
+        <label for="inspection_file" class="form-label">{% trans "Choose inspection file to upload" %}</label>
         <input type="file" class="form-control" id="inspection_file" name="file">
     </p>
-    <button type="submit" class="btn">Upload Inspection Records</button>
+    <button type="submit" class="btn">{% trans "Upload Inspection Records" %}</button>
 </form>
 
 

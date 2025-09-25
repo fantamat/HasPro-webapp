@@ -1,30 +1,31 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
-<h2>{% if create %}Add{% else %}Edit{% endif %} Building</h2>
+<h2>{% if create %}{% trans "Add Building" %}{% else %}{% trans "Edit Building" %}{% endif %}</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
 
     <div class="button-group">
-        <button type="submit" class="btn">Save</button>
-        <button type="button" onclick="window.location.href='{% url 'haspro_app:building-list' %}'" class="btn">Cancel</button>
+        <button type="submit" class="btn">{% trans "Save" %}</button>
+        <button type="button" onclick="window.location.href='{% url 'haspro_app:building-list' %}'" class="btn">{% trans "Cancel" %}</button>
         
         {% if not create %}
         <div class="nav-right">
-            <button type="button" class="btn delete" onclick="deleteObject('{% url 'haspro_app:building-delete' form.instance.pk %}', 'Are you sure you want to delete this building?');">Delete</button>
+            <button type="button" class="btn delete" onclick="deleteObject('{% url 'haspro_app:building-delete' form.instance.pk %}', '{% trans "Are you sure you want to delete this building?" %}');">{% trans "Delete" %}</button>
         </div>
         {% endif %}
     </div>
 </form>
 
 {% if not create and form.instance.manager %}
-<h3>Building Manager</h3>
+<h3>{% trans "Building Manager" %}</h3>
 <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone Number</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Email" %}</th>
+            <th>{% trans "Phone Number" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -38,7 +39,7 @@
 {% endif %}
 
 {% if not create and possible_faults %}
-<h3>Possible Faults for this Building</h3>
+<h3>{% trans "Possible Faults for this Building" %}</h3>
 <ul class="possible-faults-list">
     {% for fault in possible_faults %}
     <li class="possible-fault"><b>{{ fault.short_name }}</b> - {{ fault.description }}</li>
@@ -50,7 +51,7 @@
 <div class="expandable-section">
     <h3 class="expandable-header" onclick="toggleSection('add-faults-section')" style="cursor: pointer; display: flex; align-items: center;">
         <span class="expand-icon" id="add-faults-icon">▶</span>
-        Add More Possible Faults
+        {% trans "Add More Possible Faults" %}
     </h3>
     <div id="add-faults-section" class="expandable-content" style="display: none;">
         <form method="post" action="{% url 'haspro_app:add-possible-fault' form.instance.pk %}">
@@ -69,28 +70,28 @@
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="select-all" onchange="toggleAllFaults(this)">
                 <label class="form-check-label" for="select-all">
-                    <strong>Toggle All</strong>
+                    <strong>{% trans "Toggle All" %}</strong>
                 </label>
             </div>
             <hr>
             {% endif %}
-            <button type="submit" class="btn">Add Faults</button>
+            <button type="submit" class="btn">{% trans "Add Faults" %}</button>
         </form>
     </div>
 </div>
 {% endif %}
 
 {% if not create and firedistinguishers %}
-<h3>Fire Distinguishers in this Building</h3>
+<h3>{% trans "Fire Extinguishers in this Building" %}</h3>
 <table class="table">
     <thead>
         <tr>
-            <th>Serial Number</th>
-            <th>Kind</th>
-            <th>Type</th>
-            <th>Manufacturer</th>
-            <th>Manufactured Year</th>
-            <th>Eliminated</th>
+            <th>{% trans "Serial Number" %}</th>
+            <th>{% trans "Kind" %}</th>
+            <th>{% trans "Type" %}</th>
+            <th>{% trans "Manufacturer" %}</th>
+            <th>{% trans "Manufactured Year" %}</th>
+            <th>{% trans "Eliminated" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -101,7 +102,7 @@
             <td>{{ fd.type }}</td>
             <td>{{ fd.manufacturer }}</td>
             <td>{{ fd.manufactured_year }}</td>
-            <td>{% if fd.eliminated %}Yes{% else %}No{% endif %}</td>
+            <td>{% if fd.eliminated %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -16,10 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),
+]
+
+urlpatterns += i18n_patterns(
     path('dj-admin/', admin.site.urls),
     path('', include('haspro_app.urls')),
     # Include allauth URLs for user authentication
     path('user/', include('allauth.urls')),
-]
+    prefix_default_language=False,
+)

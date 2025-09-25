@@ -1,4 +1,5 @@
 {% extends 'base_error.html' %}
+{% load i18n %}
 
-{% block title %}403 - Forbidden{% endblock %}
-{% block message %}You do not have permission to access this resource.{% endblock %}
+{% block title %}403 - {% trans "Forbidden" %}{% endblock %}
+{% block message %}{% trans "You do not have permission to access this resource." %}{% endblock %}

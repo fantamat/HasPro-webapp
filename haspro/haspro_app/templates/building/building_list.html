@@ -1,22 +1,23 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
-<h2>Buildings</h2>
+<h2>{% trans "Buildings" %}</h2>
 <div class="filter">
     <label class="filter-option" for="firedist" onclick="var checkbox = document.getElementById('firedist'); checkbox.checked = !checkbox.checked; document.cookie='firedist=' + (checkbox.checked ? '1' : ''); location.reload();">
         <input type="checkbox" id="firedist" name="firedist" value="1" {% if request.COOKIES.firedist %}checked{% endif %}>
-        Show only with fire extinguishers
+        {% trans "Show only with fire extinguishers" %}
     </label>
 </div>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>Zipcode</th>
-            <th>Owner</th>
-            <th>Manager</th>
-            <th>Note</th>
+            <th>{% trans "ID" %}</th>
+            <th>{% trans "Address" %}</th>
+            <th>{% trans "City" %}</th>
+            <th>{% trans "ZIP Code" %}</th>
+            <th>{% trans "Owner" %}</th>
+            <th>{% trans "Manager" %}</th>
+            <th>{% trans "Note" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -31,9 +32,9 @@
             <td>{{ building.note }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="8">No buildings found.</td></tr>
+        <tr><td colspan="8">{% trans "No buildings found." %}</td></tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'haspro_app:building-create' %}" class="btn-add">Add Building</a>
+<a href="{% url 'haspro_app:building-create' %}" class="btn-add">{% trans "Add Building" %}</a>
 {% endblock %}

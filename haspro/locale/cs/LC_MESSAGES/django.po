@@ -1,0 +1,2035 @@
+# Czech translations for HasPro application.
+# Copyright (C) 2025 HasPro
+# This file is distributed under the same license as the HasPro package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: HasPro 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-25 13:03+0200\n"
+"PO-Revision-Date: 2025-09-25 12:00+0200\n"
+"Last-Translator: GitHub Copilot\n"
+"Language-Team: Czech\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#: haspro_app/models.py:8
+msgid "Project"
+msgstr "Projekt"
+
+#: haspro_app/models.py:9 haspro_app/models.py:25 haspro_app/models.py:41
+#: haspro_app/templates/building/building_form.html:26
+#: haspro_app/templates/buildingmanager/buildingmanager_list.html:8
+#: haspro_app/templates/buildingowner/buildingowner_list.html:8
+msgid "Name"
+msgstr "Název"
+
+#: haspro_app/models.py:10 haspro_app/models.py:26 haspro_app/models.py:42
+#: haspro_app/models.py:56 haspro_app/templates/building/building_list.html:15
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:27
+#: haspro_app/templates/buildingmanager/buildingmanager_list.html:9
+#: haspro_app/templates/buildingowner/buildingowner_form.html:28
+#: haspro_app/templates/buildingowner/buildingowner_list.html:9
+msgid "Address"
+msgstr "Adresa"
+
+#: haspro_app/models.py:11 haspro_app/models.py:27 haspro_app/models.py:57
+#: haspro_app/templates/building/building_list.html:16
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:28
+#: haspro_app/templates/buildingowner/buildingowner_form.html:29
+#: haspro_app/templates/buildingowner/buildingowner_list.html:10
+msgid "City"
+msgstr "Město"
+
+#: haspro_app/models.py:12 haspro_app/models.py:28 haspro_app/models.py:58
+#: haspro_app/templates/building/building_list.html:17
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:29
+#: haspro_app/templates/buildingowner/buildingowner_form.html:30
+#: haspro_app/templates/buildingowner/buildingowner_list.html:11
+msgid "ZIP Code"
+msgstr "PSČ"
+
+#: haspro_app/models.py:13 haspro_app/models.py:29
+#: haspro_app/templates/buildingowner/buildingowner_list.html:12
+msgid "IČO"
+msgstr "IČO"
+
+#: haspro_app/models.py:14 haspro_app/models.py:30
+#: haspro_app/templates/buildingowner/buildingowner_list.html:13
+msgid "DIČ"
+msgstr "DIČ"
+
+#: haspro_app/models.py:15
+msgid "Logo"
+msgstr "Logo"
+
+#: haspro_app/models.py:18 haspro_app/models.py:60
+msgid "Company"
+msgstr "Společnost"
+
+#: haspro_app/models.py:19
+msgid "Companies"
+msgstr "Společnosti"
+
+#: haspro_app/models.py:31 haspro_app/models.py:104
+msgid "Managed by"
+msgstr "Spravováno"
+
+#: haspro_app/models.py:34
+msgid "Building Owner"
+msgstr "Vlastník budovy"
+
+#: haspro_app/models.py:35
+#: haspro_app/templates/buildingowner/buildingowner_list.html:4
+msgid "Building Owners"
+msgstr "Vlastníci budov"
+
+#: haspro_app/models.py:43
+#: haspro_app/templates/buildingmanager/buildingmanager_list.html:10
+msgid "Phone"
+msgstr "Telefon"
+
+#: haspro_app/models.py:44
+#: haspro_app/templates/buildingmanager/buildingmanager_list.html:11
+msgid "Phone 2"
+msgstr "Telefon 2"
+
+#: haspro_app/models.py:45 haspro_app/templates/building/building_form.html:27
+#: haspro_app/templates/buildingmanager/buildingmanager_list.html:12
+#: users/templates/user/user_details.html:23
+msgid "Email"
+msgstr "Email"
+
+#: haspro_app/models.py:48 haspro_app/templates/building/building_form.html:22
+msgid "Building Manager"
+msgstr "Správce budovy"
+
+#: haspro_app/models.py:49
+#: haspro_app/templates/buildingmanager/buildingmanager_list.html:4
+msgid "Building Managers"
+msgstr "Správci budov"
+
+#: haspro_app/models.py:55
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:26
+#: haspro_app/templates/buildingowner/buildingowner_form.html:27
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:26
+msgid "Building ID"
+msgstr "ID budovy"
+
+#: haspro_app/models.py:59
+#: haspro_app/templates/account/snippets/already_logged_in.html:7
+#: haspro_app/templates/building/building_list.html:20
+msgid "Note"
+msgstr "Poznámka"
+
+#: haspro_app/models.py:61 haspro_app/templates/building/building_list.html:18
+msgid "Owner"
+msgstr "Vlastník"
+
+#: haspro_app/models.py:62 haspro_app/templates/building/building_list.html:19
+msgid "Manager"
+msgstr "Správce"
+
+#: haspro_app/models.py:65 haspro_app/models.py:88 haspro_app/models.py:122
+#: haspro_app/models.py:162
+msgid "Building"
+msgstr "Budova"
+
+#: haspro_app/models.py:66 haspro_app/templates/base.html:37
+#: haspro_app/templates/building/building_list.html:4
+msgid "Buildings"
+msgstr "Budovy"
+
+#: haspro_app/models.py:75 haspro_app/models.py:176
+msgid "Short Name"
+msgstr "Krátký název"
+
+#: haspro_app/models.py:76 haspro_app/models.py:119 haspro_app/models.py:145
+#: haspro_app/models.py:177
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:28
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:53
+msgid "Description"
+msgstr "Popis"
+
+#: haspro_app/models.py:77
+msgid "Default Fix Time (Days)"
+msgstr "Výchozí doba opravy (dny)"
+
+#: haspro_app/models.py:80 haspro_app/models.py:87 haspro_app/models.py:175
+msgid "Fault"
+msgstr "Závada"
+
+#: haspro_app/models.py:81
+msgid "Faults"
+msgstr "Závady"
+
+#: haspro_app/models.py:91
+msgid "Possible Fault"
+msgstr "Možná závada"
+
+#: haspro_app/models.py:92
+msgid "Possible Faults"
+msgstr "Možné závady"
+
+#: haspro_app/models.py:98 haspro_app/templates/building/building_form.html:90
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:8
+msgid "Kind"
+msgstr "Druh"
+
+#: haspro_app/models.py:99 haspro_app/templates/building/building_form.html:91
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:9
+msgid "Type"
+msgstr "Typ"
+
+#: haspro_app/models.py:100 haspro_app/templates/building/building_form.html:92
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:10
+msgid "Manufacturer"
+msgstr "Výrobce"
+
+#: haspro_app/models.py:101 haspro_app/templates/building/building_form.html:89
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:11
+msgid "Serial Number"
+msgstr "Sériové číslo"
+
+#: haspro_app/models.py:102 haspro_app/templates/building/building_form.html:94
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:12
+msgid "Eliminated"
+msgstr "Vyřazeno"
+
+#: haspro_app/models.py:103 haspro_app/templates/building/building_form.html:93
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:13
+msgid "Manufactured Year"
+msgstr "Rok výroby"
+
+#: haspro_app/models.py:105
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:14
+msgid "Next Inspection"
+msgstr "Příští kontrola"
+
+#: haspro_app/models.py:108 haspro_app/models.py:121 haspro_app/models.py:147
+msgid "Fire Extinguisher"
+msgstr "Hasicí přístroj"
+
+#: haspro_app/models.py:109 haspro_app/templates/base.html:38
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:4
+msgid "Fire Extinguishers"
+msgstr "Hasicí přístroje"
+
+#: haspro_app/models.py:120 haspro_app/models.py:146 haspro_app/models.py:163
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:29
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:54
+msgid "Created at"
+msgstr "Vytvořeno"
+
+#: haspro_app/models.py:125
+msgid "Fire Extinguisher Placement"
+msgstr "Umístění hasicího přístroje"
+
+#: haspro_app/models.py:126
+msgid "Fire Extinguisher Placements"
+msgstr "Umístění hasicích přístrojů"
+
+#: haspro_app/models.py:133 haspro_app/models.py:178
+msgid "Inspection"
+msgstr "Inspekce"
+
+#: haspro_app/models.py:134
+msgid "Filling"
+msgstr "Náplň"
+
+#: haspro_app/models.py:135
+msgid "Pressure Test"
+msgstr "Tlaková zkouška"
+
+#: haspro_app/models.py:136
+msgid "Maintenance"
+msgstr "Údržba"
+
+#: haspro_app/models.py:137
+msgid "Hose Replacement"
+msgstr "Výměna hadice"
+
+#: haspro_app/models.py:138
+msgid "Valve Replacement"
+msgstr "Výměna ventilu"
+
+#: haspro_app/models.py:139
+msgid "Refill and Pressurize"
+msgstr "Náplň a natlakování"
+
+#: haspro_app/models.py:140
+msgid "Safety Pin"
+msgstr "Pojistka"
+
+#: haspro_app/models.py:141
+msgid "Other"
+msgstr "Jiné"
+
+#: haspro_app/models.py:144
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:52
+msgid "Action Type"
+msgstr "Typ akce"
+
+#: haspro_app/models.py:150
+msgid "Fire Extinguisher Service Action"
+msgstr "Servisní akce hasicího přístroje"
+
+#: haspro_app/models.py:151
+msgid "Fire Extinguisher Service Actions"
+msgstr "Servisní akce hasicích přístrojů"
+
+#: haspro_app/models.py:159
+msgid "Inspector"
+msgstr "Kontrolor"
+
+#: haspro_app/models.py:160
+msgid "Date"
+msgstr "Datum"
+
+#: haspro_app/models.py:161 haspro_app/models.py:179
+msgid "Notes"
+msgstr "Poznámky"
+
+#: haspro_app/models.py:164
+msgid "Uploaded File"
+msgstr "Nahraný soubor"
+
+#: haspro_app/models.py:167
+msgid "Inspection Record"
+msgstr "Záznam kontroly"
+
+#: haspro_app/models.py:168
+msgid "Inspection Records"
+msgstr "Záznamy kontrol"
+
+#: haspro_app/models.py:180
+msgid "Responsible Person"
+msgstr "Odpovědná osoba"
+
+#: haspro_app/models.py:181
+msgid "Fix Due Date"
+msgstr "Termín opravy"
+
+#: haspro_app/models.py:182
+msgid "Resolved"
+msgstr "Vyřešeno"
+
+#: haspro_app/models.py:183
+msgid "Present"
+msgstr "Přítomen"
+
+#: haspro_app/models.py:186 haspro_app/models.py:193
+msgid "Fault Inspection"
+msgstr "Kontrola závady"
+
+#: haspro_app/models.py:187
+msgid "Fault Inspections"
+msgstr "Kontroly závad"
+
+#: haspro_app/models.py:194
+msgid "Photo"
+msgstr "Fotografie"
+
+#: haspro_app/models.py:195
+msgid "Uploaded at"
+msgstr "Nahráno v"
+
+#: haspro_app/models.py:198
+msgid "Fault Photo"
+msgstr "Fotografie závady"
+
+#: haspro_app/models.py:199
+msgid "Fault Photos"
+msgstr "Fotografie závad"
+
+#: haspro_app/templates/403.html:4
+msgid "Forbidden"
+msgstr "Zakázáno"
+
+#: haspro_app/templates/403.html:5
+msgid "You do not have permission to access this resource."
+msgstr "Nemáte oprávnění pro přístup k tomuto zdroji."
+
+#: haspro_app/templates/404.html:4
+msgid "Not Found"
+msgstr "Nenalezeno"
+
+#: haspro_app/templates/404.html:5
+msgid ""
+"The requested resource could not be found. Please check the URL and try "
+"again."
+msgstr ""
+"Požadovaný zdroj nebyl nalezen. Zkontrolujte prosím URL a zkuste to znovu."
+
+#: haspro_app/templates/500.html:4
+msgid "Internal Server Error"
+msgstr "Interní chyba serveru"
+
+#: haspro_app/templates/500.html:5
+msgid ""
+"An unexpected error occurred on the server. Please try again later or "
+"contact support if the problem persists."
+msgstr ""
+"Na serveru došlo k neočekávané chybě. Zkuste to prosím později nebo "
+"kontaktujte podporu, pokud problém přetrvává."
+
+#: haspro_app/templates/account/account_inactive.html:5
+#: haspro_app/templates/account/account_inactive.html:9
+msgid "Account Inactive"
+msgstr ""
+
+#: haspro_app/templates/account/account_inactive.html:12
+msgid "This account is inactive."
+msgstr ""
+
+#: haspro_app/templates/account/base_confirm_code.html:27
+#, python-format
+msgid ""
+"We've sent a code to %(recipient)s. The code expires shortly, so please "
+"enter it soon."
+msgstr ""
+
+#: haspro_app/templates/account/base_confirm_code.html:38
+#: haspro_app/templates/account/email_confirm.html:24
+#: haspro_app/templates/account/reauthenticate.html:18
+#: haspro_app/templates/mfa/reauthenticate.html:18
+msgid "Confirm"
+msgstr ""
+
+#: haspro_app/templates/account/base_confirm_code.html:42
+#: haspro_app/templates/account/base_confirm_code.html:46
+#: haspro_app/templates/account/password_reset_from_key.html:33
+#: haspro_app/templates/building/building_form.html:11
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:11
+#: haspro_app/templates/buildingowner/buildingowner_form.html:11
+#: haspro_app/templates/cookie_consent/banner.html:47
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:11
+#: haspro_app/templates/mfa/authenticate.html:28
+#: haspro_app/templates/mfa/authenticate.html:44
+#: haspro_app/templates/mfa/trust.html:29
+#: haspro_app/templates/mfa/webauthn/signup_form.html:26
+msgid "Cancel"
+msgstr ""
+
+#: haspro_app/templates/account/base_reauthenticate.html:5
+#: haspro_app/templates/account/base_reauthenticate.html:9
+msgid "Confirm Access"
+msgstr ""
+
+#: haspro_app/templates/account/base_reauthenticate.html:12
+msgid "Please reauthenticate to safeguard your account."
+msgstr ""
+
+#: haspro_app/templates/account/base_reauthenticate.html:19
+#: haspro_app/templates/mfa/authenticate.html:37
+msgid "Alternative options"
+msgstr ""
+
+#: haspro_app/templates/account/confirm_email_verification_code.html:5
+msgid "Email Verification"
+msgstr ""
+
+#: haspro_app/templates/account/confirm_email_verification_code.html:8
+msgid "Enter Email Verification Code"
+msgstr ""
+
+#: haspro_app/templates/account/confirm_login_code.html:5
+#: haspro_app/templates/account/login.html:5
+#: haspro_app/templates/account/login.html:9
+#: haspro_app/templates/account/login.html:31
+#: haspro_app/templates/account/request_login_code.html:5
+#: haspro_app/templates/allauth/layouts/base.html:68
+#: haspro_app/templates/mfa/authenticate.html:6
+#: haspro_app/templates/mfa/authenticate.html:24
+#: haspro_app/templates/socialaccount/login.html:5
+#: haspro_app/templates/socialaccount/login_redirect.html:5
+msgid "Sign In"
+msgstr ""
+
+#: haspro_app/templates/account/confirm_login_code.html:8
+msgid "Enter Sign-In Code"
+msgstr ""
+
+#: haspro_app/templates/account/confirm_password_reset_code.html:5
+#: haspro_app/templates/account/email/password_reset_subject.txt:3
+#: haspro_app/templates/account/password_reset.html:4
+#: haspro_app/templates/account/password_reset.html:8
+#: haspro_app/templates/account/password_reset_done.html:6
+#: haspro_app/templates/account/password_reset_done.html:10
+msgid "Password Reset"
+msgstr ""
+
+#: haspro_app/templates/account/confirm_password_reset_code.html:8
+msgid "Enter Password Reset Code"
+msgstr ""
+
+#: haspro_app/templates/account/confirm_phone_verification_code.html:5
+msgid "Phone Verification"
+msgstr ""
+
+#: haspro_app/templates/account/confirm_phone_verification_code.html:8
+msgid "Enter Phone Verification Code"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:4
+#: haspro_app/templates/account/email.html:8
+msgid "Email Addresses"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:12
+msgid "The following email addresses are associated with your account:"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:25
+msgid "Verified"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:29
+msgid "Unverified"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:34
+msgid "Primary"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:44
+msgid "Make Primary"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:47
+#: haspro_app/templates/account/email_change.html:37
+#: haspro_app/templates/account/phone_change.html:24
+msgid "Re-send Verification"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:50
+#: haspro_app/templates/mfa/webauthn/authenticator_confirm_delete.html:16
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:60
+#: haspro_app/templates/socialaccount/connections.html:40
+msgid "Remove"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:59
+msgid "Add Email Address"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:70
+msgid "Add Email"
+msgstr ""
+
+#: haspro_app/templates/account/email.html:80
+msgid "Do you really want to remove the selected email address?"
+msgstr ""
+
+#: haspro_app/templates/account/email/account_already_exists_message.txt:4
+#, python-format
+msgid ""
+"You are receiving this email because you or someone else tried to signup for "
+"an\n"
+"account using email address:\n"
+"\n"
+"%(email)s\n"
+"\n"
+"However, an account using that email address already exists.  In case you "
+"have\n"
+"forgotten about this, please use the password forgotten procedure to "
+"recover\n"
+"your account:\n"
+"\n"
+"%(password_reset_url)s"
+msgstr ""
+
+#: haspro_app/templates/account/email/account_already_exists_subject.txt:3
+msgid "Account Already Exists"
+msgstr ""
+
+#: haspro_app/templates/account/email/base_message.txt:1
+#, python-format
+msgid "Hello from %(site_name)s!"
+msgstr ""
+
+#: haspro_app/templates/account/email/base_message.txt:5
+#, python-format
+msgid ""
+"Thank you for using %(site_name)s!\n"
+"%(site_domain)s"
+msgstr ""
+
+#: haspro_app/templates/account/email/base_notification.txt:5
+msgid ""
+"You are receiving this mail because the following change was made to your "
+"account:"
+msgstr ""
+
+#: haspro_app/templates/account/email/base_notification.txt:10
+#, python-format
+msgid ""
+"If you do not recognize this change then please take proper security "
+"precautions immediately. The change to your account originates from:\n"
+"\n"
+"- IP address: %(ip)s\n"
+"- Browser: %(user_agent)s\n"
+"- Date: %(timestamp)s"
+msgstr ""
+
+#: haspro_app/templates/account/email/email_changed_message.txt:4
+#, python-format
+msgid "Your email has been changed from %(from_email)s to %(to_email)s."
+msgstr ""
+
+#: haspro_app/templates/account/email/email_changed_subject.txt:3
+msgid "Email Changed"
+msgstr ""
+
+#: haspro_app/templates/account/email/email_confirm_message.txt:4
+msgid "Your email has been confirmed."
+msgstr ""
+
+#: haspro_app/templates/account/email/email_confirm_subject.txt:3
+msgid "Email Confirmation"
+msgstr ""
+
+#: haspro_app/templates/account/email/email_confirmation_message.txt:5
+#, python-format
+msgid ""
+"You're receiving this email because user %(user_display)s has given your "
+"email address to register an account on %(site_domain)s."
+msgstr ""
+
+#: haspro_app/templates/account/email/email_confirmation_message.txt:7
+msgid ""
+"Your email verification code is listed below. Please enter it in your open "
+"browser window."
+msgstr ""
+
+#: haspro_app/templates/account/email/email_confirmation_message.txt:9
+#, python-format
+msgid "To confirm this is correct, go to %(activate_url)s"
+msgstr ""
+
+#: haspro_app/templates/account/email/email_confirmation_subject.txt:3
+msgid "Please Confirm Your Email Address"
+msgstr ""
+
+#: haspro_app/templates/account/email/email_deleted_message.txt:4
+#, python-format
+msgid "Email address %(deleted_email)s has been removed from your account."
+msgstr ""
+
+#: haspro_app/templates/account/email/email_deleted_subject.txt:3
+msgid "Email Removed"
+msgstr ""
+
+#: haspro_app/templates/account/email/login_code_message.txt:5
+msgid ""
+"Your sign-in code is listed below. Please enter it in your open browser "
+"window."
+msgstr ""
+
+#: haspro_app/templates/account/email/login_code_message.txt:9
+#: haspro_app/templates/account/email/password_reset_code_message.txt:9
+#: haspro_app/templates/account/email/unknown_account_message.txt:6
+msgid "This mail can be safely ignored if you did not initiate this action."
+msgstr ""
+
+#: haspro_app/templates/account/email/login_code_subject.txt:3
+msgid "Sign-In Code"
+msgstr ""
+
+#: haspro_app/templates/account/email/password_changed_message.txt:4
+msgid "Your password has been changed."
+msgstr ""
+
+#: haspro_app/templates/account/email/password_changed_subject.txt:3
+msgid "Password Changed"
+msgstr ""
+
+#: haspro_app/templates/account/email/password_reset_code_message.txt:5
+msgid ""
+"Your password reset code is listed below. Please enter it in your open "
+"browser window."
+msgstr ""
+
+#: haspro_app/templates/account/email/password_reset_code_subject.txt:3
+msgid "Password Reset Code"
+msgstr ""
+
+#: haspro_app/templates/account/email/password_reset_key_message.txt:4
+msgid ""
+"You're receiving this email because you or someone else has requested a "
+"password reset for your user account.\n"
+"It can be safely ignored if you did not request a password reset. Click the "
+"link below to reset your password."
+msgstr ""
+
+#: haspro_app/templates/account/email/password_reset_key_message.txt:9
+#, python-format
+msgid "In case you forgot, your username is %(username)s."
+msgstr ""
+
+#: haspro_app/templates/account/email/password_reset_key_subject.txt:3
+msgid "Password Reset Email"
+msgstr ""
+
+#: haspro_app/templates/account/email/password_reset_message.txt:4
+msgid "Your password has been reset."
+msgstr ""
+
+#: haspro_app/templates/account/email/password_set_message.txt:4
+msgid "Your password has been set."
+msgstr ""
+
+#: haspro_app/templates/account/email/password_set_subject.txt:3
+msgid "Password Set"
+msgstr ""
+
+#: haspro_app/templates/account/email/unknown_account_message.txt:4
+#, python-format
+msgid ""
+"You are receiving this email because you, or someone else, tried to access "
+"an account with email %(email)s. However, we do not have any record of such "
+"an account in our database."
+msgstr ""
+
+#: haspro_app/templates/account/email/unknown_account_message.txt:8
+msgid "If it was you, you can sign up for an account using the link below."
+msgstr ""
+
+#: haspro_app/templates/account/email/unknown_account_subject.txt:3
+msgid "Unknown Account"
+msgstr ""
+
+#: haspro_app/templates/account/email_change.html:5
+#: haspro_app/templates/account/email_change.html:9
+msgid "Email Address"
+msgstr ""
+
+#: haspro_app/templates/account/email_change.html:21
+#: haspro_app/templates/account/email_change.html:29
+msgid "Current email"
+msgstr ""
+
+#: haspro_app/templates/account/email_change.html:31
+msgid "Changing to"
+msgstr ""
+
+#: haspro_app/templates/account/email_change.html:35
+msgid "Your email address is still pending verification."
+msgstr ""
+
+#: haspro_app/templates/account/email_change.html:41
+msgid "Cancel Change"
+msgstr ""
+
+#: haspro_app/templates/account/email_change.html:49
+#: haspro_app/templates/account/phone_change.html:32
+msgid "Change to"
+msgstr ""
+
+#: haspro_app/templates/account/email_change.html:55
+#: haspro_app/templates/allauth/layouts/base.html:31
+msgid "Change Email"
+msgstr ""
+
+#: haspro_app/templates/account/email_confirm.html:6
+#: haspro_app/templates/account/email_confirm.html:10
+msgid "Confirm Email Address"
+msgstr ""
+
+#: haspro_app/templates/account/email_confirm.html:16
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an email "
+"address for user %(user_display)s."
+msgstr ""
+
+#: haspro_app/templates/account/email_confirm.html:30
+#: haspro_app/templates/account/messages/email_confirmation_failed.txt:2
+#, python-format
+msgid ""
+"Unable to confirm %(email)s because it is already confirmed by a different "
+"account."
+msgstr ""
+
+#: haspro_app/templates/account/email_confirm.html:36
+#, python-format
+msgid ""
+"This email confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new email confirmation request</a>."
+msgstr ""
+
+#: haspro_app/templates/account/login.html:19
+#, python-format
+msgid ""
+"If you have not created an account yet, then please %(link)ssign "
+"up%(end_link)s first."
+msgstr ""
+
+#: haspro_app/templates/account/login.html:42
+msgid "Sign in with a passkey"
+msgstr ""
+
+#: haspro_app/templates/account/login.html:47
+#: haspro_app/templates/account/request_login_code.html:9
+msgid "Send me a sign-in code"
+msgstr ""
+
+#: haspro_app/templates/account/logout.html:4
+#: haspro_app/templates/account/logout.html:8
+#: haspro_app/templates/account/logout.html:21
+#: haspro_app/templates/allauth/layouts/base.html:61
+msgid "Sign Out"
+msgstr ""
+
+#: haspro_app/templates/account/logout.html:11
+msgid "Are you sure you want to sign out?"
+msgstr ""
+
+#: haspro_app/templates/account/messages/cannot_delete_primary_email.txt:2
+#, python-format
+msgid "You cannot remove your primary email address (%(email)s)."
+msgstr ""
+
+#: haspro_app/templates/account/messages/email_confirmation_sent.txt:2
+#, python-format
+msgid "Confirmation email sent to %(email)s."
+msgstr ""
+
+#: haspro_app/templates/account/messages/email_confirmed.txt:2
+#, python-format
+msgid "You have confirmed %(email)s."
+msgstr ""
+
+#: haspro_app/templates/account/messages/email_deleted.txt:2
+#, python-format
+msgid "Removed email address %(email)s."
+msgstr ""
+
+#: haspro_app/templates/account/messages/logged_in.txt:4
+#, python-format
+msgid "Successfully signed in as %(name)s."
+msgstr ""
+
+#: haspro_app/templates/account/messages/logged_out.txt:2
+msgid "You have signed out."
+msgstr ""
+
+#: haspro_app/templates/account/messages/login_code_sent.txt:2
+#, python-format
+msgid "A sign-in code has been sent to %(recipient)s."
+msgstr ""
+
+#: haspro_app/templates/account/messages/password_changed.txt:2
+msgid "Password successfully changed."
+msgstr ""
+
+#: haspro_app/templates/account/messages/password_set.txt:2
+msgid "Password successfully set."
+msgstr ""
+
+#: haspro_app/templates/account/messages/phone_verified.txt:2
+#, python-format
+msgid "You have verified phone number %(phone)s."
+msgstr ""
+
+#: haspro_app/templates/account/messages/primary_email_set.txt:2
+msgid "Primary email address set."
+msgstr ""
+
+#: haspro_app/templates/account/messages/unverified_primary_email.txt:2
+msgid "Your primary email address must be verified."
+msgstr ""
+
+#: haspro_app/templates/account/password_change.html:4
+#: haspro_app/templates/account/password_change.html:8
+#: haspro_app/templates/account/password_change.html:20
+#: haspro_app/templates/account/password_reset_from_key.html:5
+#: haspro_app/templates/account/password_reset_from_key.html:12
+#: haspro_app/templates/account/password_reset_from_key.html:30
+#: haspro_app/templates/account/password_reset_from_key_done.html:5
+#: haspro_app/templates/account/password_reset_from_key_done.html:9
+#: haspro_app/templates/allauth/layouts/base.html:37
+msgid "Change Password"
+msgstr ""
+
+#: haspro_app/templates/account/password_change.html:22
+msgid "Forgot Password?"
+msgstr ""
+
+#: haspro_app/templates/account/password_reset.html:14
+msgid ""
+"Forgotten your password? Enter your email address below, and we'll send you "
+"an email allowing you to reset it."
+msgstr ""
+
+#: haspro_app/templates/account/password_reset.html:26
+msgid "Reset My Password"
+msgstr ""
+
+#: haspro_app/templates/account/password_reset.html:31
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
+
+#: haspro_app/templates/account/password_reset_done.html:16
+msgid ""
+"We have sent you an email. If you have not received it please check your "
+"spam folder. Otherwise contact us if you do not receive it in a few minutes."
+msgstr ""
+
+#: haspro_app/templates/account/password_reset_from_key.html:10
+msgid "Bad Token"
+msgstr ""
+
+#: haspro_app/templates/account/password_reset_from_key.html:18
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: haspro_app/templates/account/password_reset_from_key_done.html:12
+msgid "Your password is now changed."
+msgstr ""
+
+#: haspro_app/templates/account/password_set.html:5
+#: haspro_app/templates/account/password_set.html:9
+#: haspro_app/templates/account/password_set.html:21
+msgid "Set Password"
+msgstr ""
+
+#: haspro_app/templates/account/phone_change.html:5
+#: haspro_app/templates/account/phone_change.html:9
+#: haspro_app/templates/account/phone_change.html:38
+msgid "Change Phone"
+msgstr ""
+
+#: haspro_app/templates/account/phone_change.html:18
+msgid "Current phone"
+msgstr ""
+
+#: haspro_app/templates/account/phone_change.html:22
+msgid "Your phone number is still pending verification."
+msgstr ""
+
+#: haspro_app/templates/account/reauthenticate.html:6
+msgid "Enter your password:"
+msgstr ""
+
+#: haspro_app/templates/account/request_login_code.html:12
+msgid "You will receive a special code for a password-free sign-in."
+msgstr ""
+
+#: haspro_app/templates/account/request_login_code.html:24
+msgid "Request Code"
+msgstr ""
+
+#: haspro_app/templates/account/request_login_code.html:30
+msgid "Other sign-in options"
+msgstr ""
+
+#: haspro_app/templates/account/signup.html:4
+#: haspro_app/templates/account/signup_by_passkey.html:4
+#: haspro_app/templates/socialaccount/signup.html:5
+msgid "Signup"
+msgstr ""
+
+#: haspro_app/templates/account/signup.html:8
+#: haspro_app/templates/account/signup.html:30
+#: haspro_app/templates/account/signup_by_passkey.html:29
+#: haspro_app/templates/allauth/layouts/base.html:74
+#: haspro_app/templates/socialaccount/signup.html:9
+#: haspro_app/templates/socialaccount/signup.html:25
+msgid "Sign Up"
+msgstr ""
+
+#: haspro_app/templates/account/signup.html:17
+#: haspro_app/templates/account/signup_by_passkey.html:17
+#, python-format
+msgid "Already have an account? Then please %(link)ssign in%(end_link)s."
+msgstr ""
+
+#: haspro_app/templates/account/signup.html:39
+msgid "Sign up using a passkey"
+msgstr ""
+
+#: haspro_app/templates/account/signup_by_passkey.html:8
+msgid "Passkey Sign Up"
+msgstr ""
+
+#: haspro_app/templates/account/signup_by_passkey.html:36
+msgid "Other options"
+msgstr ""
+
+#: haspro_app/templates/account/signup_closed.html:5
+#: haspro_app/templates/account/signup_closed.html:9
+msgid "Sign Up Closed"
+msgstr ""
+
+#: haspro_app/templates/account/signup_closed.html:12
+msgid "We are sorry, but the sign up is currently closed."
+msgstr ""
+
+#: haspro_app/templates/account/snippets/already_logged_in.html:7
+#, python-format
+msgid "You are already logged in as %(user_display)s."
+msgstr ""
+
+#: haspro_app/templates/account/snippets/warn_no_email.html:3
+msgid "Warning:"
+msgstr ""
+
+#: haspro_app/templates/account/snippets/warn_no_email.html:3
+msgid ""
+"You currently do not have any email address set up. You should really add an "
+"email address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+#: haspro_app/templates/account/verification_sent.html:5
+#: haspro_app/templates/account/verification_sent.html:9
+#: haspro_app/templates/account/verified_email_required.html:5
+#: haspro_app/templates/account/verified_email_required.html:9
+msgid "Verify Your Email Address"
+msgstr ""
+
+#: haspro_app/templates/account/verification_sent.html:12
+msgid ""
+"We have sent an email to you for verification. Follow the link provided to "
+"finalize the signup process. If you do not see the verification email in "
+"your main inbox, check your spam folder. Please contact us if you do not "
+"receive the verification email within a few minutes."
+msgstr ""
+
+#: haspro_app/templates/account/verified_email_required.html:13
+msgid ""
+"This part of the site requires us to verify that\n"
+"you are who you claim to be. For this purpose, we require that you\n"
+"verify ownership of your email address. "
+msgstr ""
+
+#: haspro_app/templates/account/verified_email_required.html:18
+msgid ""
+"We have sent an email to you for\n"
+"verification. Please click on the link inside that email. If you do not see "
+"the verification email in your main inbox, check your spam folder. "
+"Otherwise\n"
+"contact us if you do not receive it within a few minutes."
+msgstr ""
+
+#: haspro_app/templates/account/verified_email_required.html:23
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your "
+"email address</a>."
+msgstr ""
+
+#: haspro_app/templates/allauth/layouts/base.html:18
+msgid "Messages:"
+msgstr ""
+
+#: haspro_app/templates/allauth/layouts/base.html:25
+msgid "Menu:"
+msgstr ""
+
+#: haspro_app/templates/allauth/layouts/base.html:43
+#: haspro_app/templates/socialaccount/connections.html:5
+#: haspro_app/templates/socialaccount/connections.html:9
+msgid "Account Connections"
+msgstr ""
+
+#: haspro_app/templates/allauth/layouts/base.html:49
+#: haspro_app/templates/mfa/authenticate.html:10
+#: haspro_app/templates/mfa/index.html:5 haspro_app/templates/mfa/index.html:9
+msgid "Two-Factor Authentication"
+msgstr ""
+
+#: haspro_app/templates/allauth/layouts/base.html:55
+msgid "Sessions"
+msgstr ""
+
+#: haspro_app/templates/base.html:34
+msgid "Home"
+msgstr "Domů"
+
+#: haspro_app/templates/base.html:36
+msgid "Owners"
+msgstr "Vlastníci"
+
+#: haspro_app/templates/base.html:39
+msgid "Tools"
+msgstr "Nástroje"
+
+#: haspro_app/templates/base.html:58
+msgid "Logout"
+msgstr "Odhlásit"
+
+#: haspro_app/templates/base.html:60
+msgid "Login"
+msgstr "Přihlásit"
+
+#: haspro_app/templates/base.html:79
+msgid "IsHas app"
+msgstr "Aplikace IsHas"
+
+#: haspro_app/templates/base_error.html:5
+msgid "Error"
+msgstr "Chyba"
+
+#: haspro_app/templates/base_error.html:13
+msgid "Return to Home Page"
+msgstr "Zpět na hlavní stránku"
+
+#: haspro_app/templates/building/building_form.html:4
+#: haspro_app/templates/building/building_list.html:39
+msgid "Add Building"
+msgstr "Přidat budovu"
+
+#: haspro_app/templates/building/building_form.html:4
+msgid "Edit Building"
+msgstr "Upravit budovu"
+
+#: haspro_app/templates/building/building_form.html:10
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:10
+#: haspro_app/templates/buildingowner/buildingowner_form.html:10
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:10
+#: haspro_app/templates/mfa/webauthn/edit_form.html:18
+msgid "Save"
+msgstr "Uložit"
+
+#: haspro_app/templates/building/building_form.html:15
+msgid "Are you sure you want to delete this building?"
+msgstr "Opravdu chcete odstranit tuto budovu?"
+
+#: haspro_app/templates/building/building_form.html:15
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:15
+#: haspro_app/templates/buildingowner/buildingowner_form.html:15
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:14
+msgid "Delete"
+msgstr "Odstranit"
+
+#: haspro_app/templates/building/building_form.html:28
+msgid "Phone Number"
+msgstr "Telefonní číslo"
+
+#: haspro_app/templates/building/building_form.html:42
+msgid "Possible Faults for this Building"
+msgstr "Možné závady pro tuto budovu"
+
+#: haspro_app/templates/building/building_form.html:54
+msgid "Add More Possible Faults"
+msgstr "Přidat další možné závady"
+
+#: haspro_app/templates/building/building_form.html:73
+msgid "Toggle All"
+msgstr "Přepnout vše"
+
+#: haspro_app/templates/building/building_form.html:78
+msgid "Add Faults"
+msgstr "Přidat závady"
+
+#: haspro_app/templates/building/building_form.html:85
+msgid "Fire Extinguishers in this Building"
+msgstr "Hasicí přístroje v této budově"
+
+#: haspro_app/templates/building/building_form.html:105
+#: haspro_app/templates/home.html:56 haspro_app/templates/home.html:64
+#: haspro_app/templates/home.html:72 users/templates/user/user_details.html:68
+#: users/templates/user/user_details.html:74
+msgid "Yes"
+msgstr "Ano"
+
+#: haspro_app/templates/building/building_form.html:105
+#: haspro_app/templates/home.html:56 haspro_app/templates/home.html:64
+#: haspro_app/templates/home.html:72
+msgid "No"
+msgstr "Ne"
+
+#: haspro_app/templates/building/building_list.html:8
+msgid "Show only with fire extinguishers"
+msgstr "Zobrazit pouze s hasicími přístroji"
+
+#: haspro_app/templates/building/building_list.html:14
+msgid "ID"
+msgstr "ID"
+
+#: haspro_app/templates/building/building_list.html:35
+msgid "No buildings found."
+msgstr "Nenalezeny žádné budovy."
+
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:4
+#: haspro_app/templates/buildingmanager/buildingmanager_list.html:29
+msgid "Add Building Manager"
+msgstr "Přidat správce budovy"
+
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:4
+msgid "Edit Building Manager"
+msgstr "Upravit správce budovy"
+
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:15
+msgid "Are you sure you want to delete this building manager?"
+msgstr "Opravdu chcete odstranit tohoto správce budovy?"
+
+#: haspro_app/templates/buildingmanager/buildingmanager_form.html:22
+msgid "Managed Buildings"
+msgstr "Spravované budovy"
+
+#: haspro_app/templates/buildingmanager/buildingmanager_list.html:25
+msgid "No building managers found."
+msgstr "Nenalezeni žádní správci budov."
+
+#: haspro_app/templates/buildingowner/buildingowner_form.html:4
+msgid "Add Building Owner"
+msgstr "Přidat vlastníka budovy"
+
+#: haspro_app/templates/buildingowner/buildingowner_form.html:4
+msgid "Edit Building Owner"
+msgstr "Upravit vlastníka budovy"
+
+#: haspro_app/templates/buildingowner/buildingowner_form.html:15
+msgid "Are you sure you want to delete this owner?"
+msgstr "Opravdu chcete odstranit tohoto vlastníka?"
+
+#: haspro_app/templates/buildingowner/buildingowner_form.html:23
+msgid "Owned Buildings"
+msgstr "Vlastněné budovy"
+
+#: haspro_app/templates/buildingowner/buildingowner_list.html:27
+msgid "No owners found."
+msgstr "Nenalezeni žádní vlastníci."
+
+#: haspro_app/templates/buildingowner/buildingowner_list.html:31
+msgid "Add Owner"
+msgstr "Přidat vlastníka"
+
+#: haspro_app/templates/cookie_consent/banner.html:14
+msgid ""
+"We use cookies to enhance your experience on our website. By continuing to "
+"use our site, you agree to our use of cookies."
+msgstr ""
+
+#: haspro_app/templates/cookie_consent/banner.html:17
+msgid "Accept All"
+msgstr ""
+
+#: haspro_app/templates/cookie_consent/banner.html:18
+msgid "Settings"
+msgstr ""
+
+#: haspro_app/templates/cookie_consent/banner.html:31
+msgid "Cookie Settings"
+msgstr ""
+
+#: haspro_app/templates/cookie_consent/banner.html:48
+msgid "Save Settings"
+msgstr ""
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:4
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:35
+msgid "Add Fire Extinguisher"
+msgstr "Přidat hasicí přístroj"
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:4
+msgid "Edit Fire Extinguisher"
+msgstr "Upravit hasicí přístroj"
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:14
+msgid "Are you sure you want to delete this fire extinguisher?"
+msgstr "Opravdu chcete odstranit tento hasicí přístroj?"
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:22
+msgid "Placement History"
+msgstr "Historie umístění"
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:27
+msgid "Building Address"
+msgstr "Adresa budovy"
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:41
+msgid "No placements found."
+msgstr "Nenalezena žádná umístění."
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:48
+msgid "Service Actions"
+msgstr "Servisní akce"
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:65
+msgid "No service actions found."
+msgstr "Nenalezeny žádné servisní akce."
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:15
+msgid "Current Placement"
+msgstr "Současné umístění"
+
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:31
+msgid "No fire extinguishers found."
+msgstr "Nenalezeny žádné hasicí přístroje."
+
+#: haspro_app/templates/home.html:5
+msgid "Welcome to HasPro"
+msgstr "Vítejte v HasPro"
+
+#: haspro_app/templates/home.html:10
+msgid "User Information"
+msgstr "Informace o uživateli"
+
+#: haspro_app/templates/home.html:13
+msgid "Username:"
+msgstr "Uživatelské jméno:"
+
+#: haspro_app/templates/home.html:17
+msgid "Email:"
+msgstr "Email:"
+
+#: haspro_app/templates/home.html:18 haspro_app/templates/home.html:22
+#: haspro_app/templates/home.html:26 haspro_app/templates/home.html:30
+msgid "Not provided"
+msgstr ""
+
+#: haspro_app/templates/home.html:21
+msgid "First Name:"
+msgstr ""
+
+#: haspro_app/templates/home.html:25
+msgid "Last Name:"
+msgstr ""
+
+#: haspro_app/templates/home.html:29
+msgid "Phone:"
+msgstr ""
+
+#: haspro_app/templates/home.html:33
+msgid "Technician ID:"
+msgstr ""
+
+#: haspro_app/templates/home.html:34
+msgid "Not assigned"
+msgstr ""
+
+#: haspro_app/templates/home.html:37
+msgid "Current Project:"
+msgstr ""
+
+#: haspro_app/templates/home.html:38
+msgid "No project assigned"
+msgstr ""
+
+#: haspro_app/templates/home.html:45
+msgid "Project Permissions"
+msgstr ""
+
+#: haspro_app/templates/home.html:49
+msgid "Project:"
+msgstr "Projekt:"
+
+#: haspro_app/templates/home.html:53
+msgid "Can View:"
+msgstr "Může zobrazit:"
+
+#: haspro_app/templates/home.html:61
+msgid "Can Edit:"
+msgstr "Může upravovat:"
+
+#: haspro_app/templates/home.html:69
+msgid "Is Admin:"
+msgstr "Je administrátor:"
+
+#: haspro_app/templates/home.html:77
+msgid "Added:"
+msgstr "Přidáno:"
+
+#: haspro_app/templates/home.html:82
+msgid "No project permissions found."
+msgstr "Nenalezena žádná oprávnění k projektu."
+
+#: haspro_app/templates/home.html:88
+msgid "Company Information"
+msgstr "Informace o společnosti"
+
+#: haspro_app/templates/home.html:92
+#, fuzzy
+#| msgid "Name"
+msgid "Name:"
+msgstr "Název"
+
+#: haspro_app/templates/home.html:96
+#, fuzzy
+#| msgid "Address"
+msgid "Address:"
+msgstr "Adresa"
+
+#: haspro_app/templates/home.html:100
+#, fuzzy
+#| msgid "City"
+msgid "City:"
+msgstr "Město"
+
+#: haspro_app/templates/home.html:104
+#, fuzzy
+#| msgid "ZIP Code"
+msgid "ZIP Code:"
+msgstr "PSČ"
+
+#: haspro_app/templates/home.html:108
+msgid "IČO:"
+msgstr "IČO:"
+
+#: haspro_app/templates/home.html:112
+msgid "DIČ:"
+msgstr "DIČ:"
+
+#: haspro_app/templates/home.html:116
+#, fuzzy
+#| msgid "Logo"
+msgid "Logo:"
+msgstr "Logo"
+
+#: haspro_app/templates/home.html:119
+msgid "Company Logo"
+msgstr "Logo společnosti"
+
+#: haspro_app/templates/home.html:121
+msgid "No logo uploaded"
+msgstr "Nebylo nahráno žádné logo"
+
+#: haspro_app/templates/home.html:127
+msgid "No company information available."
+msgstr "Nejsou k dispozici žádné informace o společnosti."
+
+#: haspro_app/templates/home.html:132
+msgid ""
+"Use the navigation menu to manage building owners, buildings, fire "
+"extinguishers, and tools."
+msgstr ""
+"Použijte navigační menu pro správu vlastníků budov, budov, hasicích "
+"přístrojů a nástrojů."
+
+#: haspro_app/templates/mfa/authenticate.html:13
+msgid ""
+"Your account is protected by two-factor authentication. Please enter an "
+"authenticator code:"
+msgstr ""
+
+#: haspro_app/templates/mfa/authenticate.html:41
+#: haspro_app/templates/mfa/webauthn/reauthenticate.html:15
+msgid "Use a security key"
+msgstr ""
+
+#: haspro_app/templates/mfa/email/recovery_codes_generated_message.txt:4
+msgid ""
+"A new set of Two-Factor Authentication recovery codes has been generated."
+msgstr ""
+
+#: haspro_app/templates/mfa/email/recovery_codes_generated_subject.txt:3
+msgid "New Recovery Codes Generated"
+msgstr ""
+
+#: haspro_app/templates/mfa/email/totp_activated_message.txt:4
+#: haspro_app/templates/mfa/messages/totp_activated.txt:2
+msgid "Authenticator app activated."
+msgstr ""
+
+#: haspro_app/templates/mfa/email/totp_activated_subject.txt:3
+msgid "Authenticator App Activated"
+msgstr ""
+
+#: haspro_app/templates/mfa/email/totp_deactivated_message.txt:4
+#: haspro_app/templates/mfa/messages/totp_deactivated.txt:2
+msgid "Authenticator app deactivated."
+msgstr ""
+
+#: haspro_app/templates/mfa/email/totp_deactivated_subject.txt:3
+msgid "Authenticator App Deactivated"
+msgstr ""
+
+#: haspro_app/templates/mfa/email/webauthn_added_message.txt:4
+msgid "A new security key has been added."
+msgstr ""
+
+#: haspro_app/templates/mfa/email/webauthn_added_subject.txt:3
+msgid "Security Key Added"
+msgstr ""
+
+#: haspro_app/templates/mfa/email/webauthn_removed_message.txt:4
+msgid "A security key has been removed."
+msgstr ""
+
+#: haspro_app/templates/mfa/email/webauthn_removed_subject.txt:3
+msgid "Security Key Removed"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:14
+#: haspro_app/templates/mfa/totp/base.html:4
+msgid "Authenticator App"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:19
+msgid "Authentication using an authenticator app is active."
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:23
+msgid "An authenticator app is not active."
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:32
+#: haspro_app/templates/mfa/totp/deactivate_form.html:24
+msgid "Deactivate"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:36
+#: haspro_app/templates/mfa/totp/activate_form.html:32
+msgid "Activate"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:45
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:8
+#: haspro_app/templates/mfa/webauthn/base.html:4
+msgid "Security Keys"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:50
+#, python-format
+msgid "You have added %(count)s security key."
+msgid_plural "You have added %(count)s security keys."
+msgstr[0] ""
+msgstr[1] ""
+
+#: haspro_app/templates/mfa/index.html:54
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:12
+msgid "No security keys have been added."
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:62
+msgid "Manage"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:67
+#: haspro_app/templates/mfa/webauthn/add_form.html:18
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:70
+msgid "Add"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:77
+#: haspro_app/templates/mfa/recovery_codes/base.html:4
+#: haspro_app/templates/mfa/recovery_codes/generate.html:6
+#: haspro_app/templates/mfa/recovery_codes/index.html:6
+msgid "Recovery Codes"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:82
+#: haspro_app/templates/mfa/recovery_codes/index.html:9
+#, python-format
+msgid ""
+"There is %(unused_count)s out of %(total_count)s recovery codes available."
+msgid_plural ""
+"There are %(unused_count)s out of %(total_count)s recovery codes available."
+msgstr[0] ""
+msgstr[1] ""
+
+#: haspro_app/templates/mfa/index.html:86
+msgid "No recovery codes set up."
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:96
+msgid "View"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:102
+msgid "Download"
+msgstr ""
+
+#: haspro_app/templates/mfa/index.html:110
+#: haspro_app/templates/mfa/recovery_codes/generate.html:29
+msgid "Generate"
+msgstr ""
+
+#: haspro_app/templates/mfa/messages/recovery_codes_generated.txt:2
+msgid "A new set of recovery codes has been generated."
+msgstr ""
+
+#: haspro_app/templates/mfa/messages/webauthn_added.txt:2
+msgid "Security key added."
+msgstr ""
+
+#: haspro_app/templates/mfa/messages/webauthn_removed.txt:2
+msgid "Security key removed."
+msgstr ""
+
+#: haspro_app/templates/mfa/reauthenticate.html:6
+msgid "Enter an authenticator code:"
+msgstr ""
+
+#: haspro_app/templates/mfa/recovery_codes/generate.html:9
+msgid "You are about to generate a new set of recovery codes for your account."
+msgstr ""
+
+#: haspro_app/templates/mfa/recovery_codes/generate.html:11
+msgid "This action will invalidate your existing codes."
+msgstr ""
+
+#: haspro_app/templates/mfa/recovery_codes/generate.html:13
+msgid "Are you sure?"
+msgstr ""
+
+#: haspro_app/templates/mfa/recovery_codes/index.html:13
+msgid "Unused codes"
+msgstr ""
+
+#: haspro_app/templates/mfa/recovery_codes/index.html:25
+msgid "Download codes"
+msgstr ""
+
+#: haspro_app/templates/mfa/recovery_codes/index.html:30
+msgid "Generate new codes"
+msgstr ""
+
+#: haspro_app/templates/mfa/totp/activate_form.html:4
+#: haspro_app/templates/mfa/totp/activate_form.html:8
+msgid "Activate Authenticator App"
+msgstr ""
+
+#: haspro_app/templates/mfa/totp/activate_form.html:11
+msgid ""
+"To protect your account with two-factor authentication, scan the QR code "
+"below with your authenticator app. Then, input the verification code "
+"generated by the app below."
+msgstr ""
+
+#: haspro_app/templates/mfa/totp/activate_form.html:21
+msgid "Authenticator secret"
+msgstr ""
+
+#: haspro_app/templates/mfa/totp/activate_form.html:24
+msgid ""
+"You can store this secret and use it to reinstall your authenticator app at "
+"a later time."
+msgstr ""
+
+#: haspro_app/templates/mfa/totp/deactivate_form.html:5
+#: haspro_app/templates/mfa/totp/deactivate_form.html:9
+msgid "Deactivate Authenticator App"
+msgstr ""
+
+#: haspro_app/templates/mfa/totp/deactivate_form.html:12
+msgid ""
+"You are about to deactivate authenticator app based authentication. Are you "
+"sure?"
+msgstr ""
+
+#: haspro_app/templates/mfa/trust.html:4 haspro_app/templates/mfa/trust.html:8
+msgid "Trust this Browser?"
+msgstr ""
+
+#: haspro_app/templates/mfa/trust.html:11
+msgid ""
+"If you choose to trust this browser, you will not be asked for a "
+"verification code the next time you sign in."
+msgstr ""
+
+#: haspro_app/templates/mfa/trust.html:23
+#, python-format
+msgid "Trust for %(period)s"
+msgstr ""
+
+#: haspro_app/templates/mfa/trust.html:26
+msgid "Don't Trust"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/add_form.html:7
+msgid "Add Security Key"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_confirm_delete.html:6
+msgid "Remove Security Key"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_confirm_delete.html:9
+msgid "Are you sure you want to remove this security key?"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:18
+msgid "Key"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:21
+msgid "Usage"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:33
+msgid "Passkey"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:37
+msgid "Security key"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:40
+msgid "This key does not indicate whether it is a passkey."
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:41
+msgid "Unspecified"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:46
+#, python-format
+msgid "Added on %(created_at)s"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:48
+#, python-format
+msgid "Last used %(last_used)s"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/authenticator_list.html:56
+msgid "Edit"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/edit_form.html:7
+msgid "Edit Security Key"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/signup_form.html:7
+msgid "Create Passkey"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/signup_form.html:10
+msgid ""
+"You are about to create a passkey for your account. As you can add "
+"additional keys later on, you can use a descriptive name to tell the keys "
+"apart."
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/signup_form.html:21
+msgid "Create"
+msgstr ""
+
+#: haspro_app/templates/mfa/webauthn/snippets/scripts.html:2
+msgid "This functionality requires JavaScript."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/authentication_error.html:5
+#: haspro_app/templates/socialaccount/authentication_error.html:9
+msgid "Third-Party Login Failure"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/authentication_error.html:12
+msgid ""
+"An error occurred while attempting to login via your third-party account."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/connections.html:13
+msgid ""
+"You can sign in to your account using any of the following third-party "
+"accounts:"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/connections.html:46
+msgid "You currently have no third-party accounts connected to this account."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/connections.html:50
+msgid "Add a Third-Party Account"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/email/account_connected_message.txt:4
+#, python-format
+msgid ""
+"A third-party account from %(provider)s has been connected to your account."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/email/account_connected_subject.txt:3
+msgid "Third-Party Account Connected"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/email/account_disconnected_message.txt:4
+#, python-format
+msgid ""
+"A third-party account from %(provider)s has been disconnected from your "
+"account."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/email/account_disconnected_subject.txt:3
+msgid "Third-Party Account Disconnected"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/login.html:10
+#, python-format
+msgid "Connect %(provider)s"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/login.html:13
+#, python-format
+msgid "You are about to connect a new third-party account from %(provider)s."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/login.html:17
+#, python-format
+msgid "Sign In Via %(provider)s"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/login.html:20
+#, python-format
+msgid "You are about to sign in using a third-party account from %(provider)s."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/login.html:27
+#: haspro_app/templates/socialaccount/login_redirect.html:10
+msgid "Continue"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/login_cancelled.html:5
+#: haspro_app/templates/socialaccount/login_cancelled.html:9
+msgid "Login Cancelled"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/login_cancelled.html:13
+#, python-format
+msgid ""
+"You decided to cancel logging in to our site using one of your existing "
+"accounts. If this was a mistake, please proceed to <a "
+"href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/messages/account_connected.txt:2
+msgid "The third-party account has been connected."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/messages/account_connected_other.txt:2
+msgid "The third-party account is already connected to a different account."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/messages/account_disconnected.txt:2
+msgid "The third-party account has been disconnected."
+msgstr ""
+
+#: haspro_app/templates/socialaccount/signup.html:12
+#, python-format
+msgid ""
+"You are about to use your %(provider_name)s account to login to\n"
+"%(site_name)s. As a final step, please complete the following form:"
+msgstr ""
+
+#: haspro_app/templates/socialaccount/snippets/login.html:10
+msgid "Or use a third-party"
+msgstr ""
+
+#: haspro_app/templates/tools/tools.html:7
+msgid "Import table with buildings with its managers"
+msgstr "Importovat tabulku budov se správci"
+
+#: haspro_app/templates/tools/tools.html:10
+#: haspro_app/templates/tools/tools.html:31
+msgid "Select Owner"
+msgstr "Vybrat vlastníka"
+
+#: haspro_app/templates/tools/tools.html:18
+#: haspro_app/templates/tools/tools.html:39
+msgid "Choose file to import"
+msgstr "Vybrat soubor k importu"
+
+#: haspro_app/templates/tools/tools.html:21
+#: haspro_app/templates/tools/tools.html:42
+msgid "Import"
+msgstr "Importovat"
+
+#: haspro_app/templates/tools/tools.html:27
+msgid "Import table with fire extinguishers"
+msgstr "Importovat tabulku hasicích přístrojů"
+
+#: haspro_app/templates/tools/tools.html:46
+msgid "Download Database Snapshot"
+msgstr "Stáhnout snímek databáze"
+
+#: haspro_app/templates/tools/tools.html:48
+msgid ""
+"Download a complete snapshot of your company's database for mobile app "
+"synchronization."
+msgstr ""
+"Stáhnout kompletní snímek databáze vaší společnosti pro synchronizaci s "
+"mobilní aplikací."
+
+#: haspro_app/templates/tools/tools.html:50
+msgid "Download DB Snapshot"
+msgstr "Stáhnout snímek DB"
+
+#: haspro_app/templates/tools/tools.html:54
+#: haspro_app/templates/tools/tools.html:60
+msgid "Upload Inspection Records"
+msgstr "Nahrát záznamy kontrol"
+
+#: haspro_app/templates/tools/tools.html:57
+msgid "Choose inspection file to upload"
+msgstr "Vybrat soubor kontroly k nahrání"
+
+#: haspro_app/views.py:130
+#, python-format
+msgid "Fault with ID %(fault_id)s does not exist."
+msgstr "Závada s ID %(fault_id)s neexistuje."
+
+#: haspro_app/views.py:133
+#, python-format
+msgid "Added %(count)d fault(s) to building."
+msgstr "Přidáno %(count)d závad(y) do budovy."
+
+#: haspro_app/views.py:135
+msgid "No new faults were added (they may already exist for this building)."
+msgstr "Nebyly přidány žádné nové závady (mohou již pro tuto budovu existovat)."
+
+#: haspro_app/views.py:137
+msgid "No faults selected."
+msgstr "Nebyly vybrány žádné závady."
+
+#: haspro_app/views.py:146
+#, python-format
+msgid "Building %(building_id)s deleted."
+msgstr "Budova %(building_id)s byla odstraněna."
+
+#: haspro_app/views.py:196
+#, python-format
+msgid "Building owner %(name)s deleted."
+msgstr "Vlastník budovy %(name)s byl odstraněn."
+
+#: haspro_app/views.py:237
+#, python-format
+msgid "Building manager %(name)s deleted."
+msgstr "Správce budovy %(name)s byl odstraněn."
+
+#: haspro_app/views.py:282
+#, python-format
+msgid "Fire extinguisher %(serial_number)s deleted."
+msgstr "Hasicí přístroj %(serial_number)s byl odstraněn."
+
+#: haspro_app/views.py:303
+msgid "Error importing building manager data: Selected owner does not exist."
+msgstr "Chyba při importu dat správců budov: Vybraný vlastník neexistuje."
+
+#: haspro_app/views.py:306
+msgid "Error importing building manager data: No owner selected."
+msgstr "Chyba při importu dat správců budov: Nebyl vybrán žádný vlastník."
+
+#: haspro_app/views.py:311
+#, python-format
+msgid "Error importing building manager data: %(error)s"
+msgstr "Chyba při importu dat správců budov: %(error)s"
+
+#: haspro_app/views.py:313
+#, python-format
+msgid "Successfully imported %(count)d buildings and their managers."
+msgstr "Úspěšně importováno %(count)d budov a jejich správců."
+
+#: haspro_app/views.py:316
+msgid "Error importing building manager data: No file provided."
+msgstr "Chyba při importu dat správců budov: Nebyl poskytnut žádný soubor."
+
+#: haspro_app/views.py:330
+msgid "Error importing fire extinguisher data: Selected owner does not exist."
+msgstr "Chyba při importu dat hasicích přístrojů: Vybraný vlastník neexistuje."
+
+#: haspro_app/views.py:333
+msgid "Error importing fire extinguisher data: No owner selected."
+msgstr "Chyba při importu dat hasicích přístrojů: Nebyl vybrán žádný vlastník."
+
+#: haspro_app/views.py:338
+#, python-format
+msgid "Error importing fire extinguisher data: %(error)s"
+msgstr "Chyba při importu dat hasicích přístrojů: %(error)s"
+
+#: haspro_app/views.py:340
+#, python-format
+msgid "Successfully imported %(count)d fire extinguisher records."
+msgstr "Úspěšně importováno %(count)d záznamů hasicích přístrojů."
+
+#: haspro_app/views.py:343
+msgid "Error importing fire extinguisher data: No file provided."
+msgstr "Chyba při importu dat hasicích přístrojů: Nebyl poskytnut žádný soubor."
+
+#: haspro_app/views.py:374
+msgid "No company found for the current project."
+msgstr "Pro aktuální projekt nebyla nalezena žádná společnost."
+
+#: haspro_app/views.py:380
+msgid "Error creating database snapshot."
+msgstr "Chyba při vytváření snímku databáze."
+
+#: haspro_app/views.py:394
+msgid "Error updating inspection records: No company found."
+msgstr "Chyba při aktualizaci záznamů kontrol: Nebyla nalezena žádná společnost."
+
+#: haspro_app/views.py:399
+#, python-format
+msgid "Error updating inspection records: %(error)s"
+msgstr "Chyba při aktualizaci záznamů kontrol: %(error)s"
+
+#: haspro_app/views.py:401
+#, python-format
+msgid "Successfully updated %(count)d inspection records."
+msgstr "Úspěšně aktualizováno %(count)d záznamů kontrol."
+
+#: haspro_app/views.py:404
+msgid "Error updating inspection records: No file provided."
+msgstr ""
+
+#: users/apps.py:7
+msgid "Users"
+msgstr ""
+
+#: users/templates/user/user_details.html:4
+msgid "User Details"
+msgstr ""
+
+#: users/templates/user/user_details.html:8
+msgid "Account Information"
+msgstr ""
+
+#: users/templates/user/user_details.html:14
+msgid "Basic Information"
+msgstr ""
+
+#: users/templates/user/user_details.html:19
+msgid "Username"
+msgstr ""
+
+#: users/templates/user/user_details.html:27
+msgid "Status"
+msgstr ""
+
+#: users/templates/user/user_details.html:29
+msgid "Active,Inactive"
+msgstr ""
+
+#: users/templates/user/user_details.html:37
+msgid "Account History"
+msgstr ""
+
+#: users/templates/user/user_details.html:42
+msgid "Date joined"
+msgstr ""
+
+#: users/templates/user/user_details.html:46
+msgid "Last login"
+msgstr ""
+
+#: users/templates/user/user_details.html:51
+msgid "Never"
+msgstr ""
+
+#: users/templates/user/user_details.html:61
+msgid "Administrative"
+msgstr ""
+
+#: users/templates/user/user_details.html:67
+msgid "Staff"
+msgstr ""
+
+#: users/templates/user/user_details.html:73
+msgid "Superuser"
+msgstr ""
+
+#: users/templates/user/user_settings.html:4
+#: users/templates/user/user_settings.html:8
+msgid "User Settings"
+msgstr ""

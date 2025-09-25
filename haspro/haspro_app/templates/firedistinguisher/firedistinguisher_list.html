@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
-<h2>Fire Distinguishers</h2>
+<h2>{% trans "Fire Extinguishers" %}</h2>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Kind</th>
-            <th>Type</th>
-            <th>Manufacturer</th>
-            <th>Serial Number</th>
-            <th>Eliminated</th>
-            <th>Manufactured At</th>
-            <th>Next Inspection</th>
-            <th>Current Placement</th>
+            <th>{% trans "Kind" %}</th>
+            <th>{% trans "Type" %}</th>
+            <th>{% trans "Manufacturer" %}</th>
+            <th>{% trans "Serial Number" %}</th>
+            <th>{% trans "Eliminated" %}</th>
+            <th>{% trans "Manufactured Year" %}</th>
+            <th>{% trans "Next Inspection" %}</th>
+            <th>{% trans "Current Placement" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -21,15 +22,15 @@
             <td>{{ fd.type }}</td>
             <td>{{ fd.manufacturer }}</td>
             <td>{{ fd.serial_number }}</td>
-            <td>{{ fd.eliminated|yesno:"Yes,No" }}</td>
+            <td>{{ fd.eliminated|yesno:"Ano,Ne" }}</td>
             <td>{{ fd.manufactured_year }}</td>
             <td>{{ fd.next_inspection }}</td>
             <td>{{ fd.get_current_placement.building }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="8">No fire distinguishers found.</td></tr>
+        <tr><td colspan="8">{% trans "No fire extinguishers found." %}</td></tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'haspro_app:firedistinguisher-create' %}" class="btn-add">Add Fire Distinguisher</a>
+<a href="{% url 'haspro_app:firedistinguisher-create' %}" class="btn-add">{% trans "Add Fire Extinguisher" %}</a>
 {% endblock %}

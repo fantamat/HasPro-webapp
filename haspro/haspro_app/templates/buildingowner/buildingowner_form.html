@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
-<h2>{% if create %}Add{% else %}Edit{% endif %} Building Owner</h2>
+<h2>{% if create %}{% trans "Add Building Owner" %}{% else %}{% trans "Edit Building Owner" %}{% endif %}</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
 
     <div class="button-group">
-        <button type="submit" class="btn">Save</button>
-        <button type="button" onclick="window.location.href='{% url 'haspro_app:buildingowner-list' %}'" class="btn">Cancel</button>
+        <button type="submit" class="btn">{% trans "Save" %}</button>
+        <button type="button" onclick="window.location.href='{% url 'haspro_app:buildingowner-list' %}'" class="btn">{% trans "Cancel" %}</button>
 
         {% if not create %}
         <div class="nav-right">
-            <button type="button" class="btn delete" onclick="deleteObject('{% url 'haspro_app:buildingowner-delete' form.instance.pk %}', 'Are you sure you want to delete this owner?');">Delete</button>
+            <button type="button" class="btn delete" onclick="deleteObject('{% url 'haspro_app:buildingowner-delete' form.instance.pk %}', '{% trans "Are you sure you want to delete this owner?" %}');">{% trans "Delete" %}</button>
         </div>
         {% endif %}
     </div>
@@ -19,14 +20,14 @@
 
 
 {% if not create and buildings %}
-<h3>Managed Buildings</h3>
+<h3>{% trans "Owned Buildings" %}</h3>
 <table class="table">
     <thead>
         <tr>
-            <th>Building ID</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>ZIP Code</th>
+            <th>{% trans "Building ID" %}</th>
+            <th>{% trans "Address" %}</th>
+            <th>{% trans "City" %}</th>
+            <th>{% trans "ZIP Code" %}</th>
         </tr>
     </thead>
     <tbody>

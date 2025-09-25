@@ -1,4 +1,5 @@
 {% extends 'base_error.html' %}
+{% load i18n %}
 
-{% block title %}404 - Not Found{% endblock %}
-{% block message %}The requested resource could not be found. Please check the URL and try again.{% endblock %}
+{% block title %}404 - {% trans "Not Found" %}{% endblock %}
+{% block message %}{% trans "The requested resource could not be found. Please check the URL and try again." %}{% endblock %}

@@ -12,6 +12,7 @@ from .utils.imports import import_building_manager_data, import_firedistinguishe
 from .utils.add_inspection import add_inspection
 from django.http import FileResponse
 from django.contrib import messages
+from django.utils.translation import gettext as _
 import logging
 import traceback
 from django.db.models import Max
@@ -126,14 +127,14 @@ def add_possible_fault(request, pk):
                     if created:
                         added_count += 1
                 except Fault.DoesNotExist:
-                    messages.error(request, f"Fault with ID {fault_id} does not exist.")
+                    messages.error(request, _("Fault with ID %(fault_id)s does not exist.") % {'fault_id': fault_id})
             
             if added_count > 0:
-                messages.success(request, f"Added {added_count} fault(s) to building.")
+                messages.success(request, _("Added %(count)d fault(s) to building.") % {'count': added_count})
             else:
-                messages.info(request, "No new faults were added (they may already exist for this building).")
+                messages.info(request, _("No new faults were added (they may already exist for this building)."))
         else:
-            messages.warning(request, "No faults selected.")
+            messages.warning(request, _("No faults selected."))
     return redirect('haspro_app:building-edit', pk=pk)
 
 
@@ -142,7 +143,7 @@ def building_delete(request, pk):
     building = Building.objects.get(pk=pk)
     if request.method == 'POST':
         building.delete()
-        messages.success(request, f"Building deleted {building.id}.")
+        messages.success(request, _("Building %(building_id)s deleted.") % {'building_id': building.id})
     return redirect('haspro_app:building-list')
 
 
@@ -192,7 +193,7 @@ def buildingowner_delete(request, pk):
     owner = BuildingOwner.objects.get(pk=pk)
     if request.method == 'POST':
         owner.delete()
-        messages.success(request, f"Building owner deleted {owner.name}.")
+        messages.success(request, _("Building owner %(name)s deleted.") % {'name': owner.name})
     return redirect('haspro_app:buildingowner-list')
 
 
@@ -233,7 +234,7 @@ def buildingmanager_delete(request, pk):
     manager = BuildingManager.objects.get(pk=pk)
     if request.method == 'POST':
         manager.delete()
-        messages.success(request, f"Building manager deleted {manager.name}.")
+        messages.success(request, _("Building manager %(name)s deleted.") % {'name': manager.name})
     return redirect('haspro_app:buildingmanager-list')
 
 
@@ -278,7 +279,7 @@ def firedistinguisher_delete(request, pk):
     firedistinguisher = Firedistinguisher.objects.get(pk=pk)
     if request.method == 'POST':
         firedistinguisher.delete()
-        messages.success(request, f"Fire extinguisher deleted {firedistinguisher.serial_number}.")
+        messages.success(request, _("Fire extinguisher %(serial_number)s deleted.") % {'serial_number': firedistinguisher.serial_number})
     return redirect('haspro_app:firedistinguisher-list')
 
 # _______________________________ Data Imports _______________________________
@@ -299,20 +300,20 @@ def import_building_manager_list(request):
                 try:
                     owner = BuildingOwner.objects.get(id=int(request.POST['owner']), managed_by=request.company)
                 except BuildingOwner.DoesNotExist:
-                    messages.error(request, f"Error importing building manager data: Selected owner does not exist.")
+                    messages.error(request, _("Error importing building manager data: Selected owner does not exist."))
                     return redirect('haspro_app:tools-view')
             else:
-                messages.error(request, f"Error importing building manager data: No owner selected.")
+                messages.error(request, _("Error importing building manager data: No owner selected."))
                 return redirect('haspro_app:tools-view')
 
             num_imported, error_message = import_building_manager_data(file, owner, request.company)
             if error_message:
-                messages.error(request, f"Error importing building manager data: {error_message}")
+                messages.error(request, _("Error importing building manager data: %(error)s") % {'error': error_message})
             else:
-                messages.success(request, f"Successfully imported {num_imported} buildings and their managers.")
+                messages.success(request, _("Successfully imported %(count)d buildings and their managers.") % {'count': num_imported})
 
         else:
-            messages.error(request, f"Error importing building manager data no file provided")
+            messages.error(request, _("Error importing building manager data: No file provided."))
 
     return redirect('haspro_app:tools-view')
 
@@ -326,20 +327,20 @@ def import_firedistinguisher_list(request):
                 try:
                     owner = BuildingOwner.objects.get(id=int(request.POST['owner']), managed_by=request.company)
                 except BuildingOwner.DoesNotExist:
-                    messages.error(request, f"Error importing fire distinguisher data: Selected owner does not exist.")
+                    messages.error(request, _("Error importing fire extinguisher data: Selected owner does not exist."))
                     return redirect('haspro_app:tools-view')
             else:
-                messages.error(request, f"Error importing fire distinguisher data: No owner selected.")
+                messages.error(request, _("Error importing fire extinguisher data: No owner selected."))
                 return redirect('haspro_app:tools-view')
 
             num_imported, error_message = import_firedistinguisher_data(file, owner, request.company)
             if error_message:
-                messages.error(request, f"Error importing fire distinguisher data: {error_message}")
+                messages.error(request, _("Error importing fire extinguisher data: %(error)s") % {'error': error_message})
             else:
-                messages.success(request, f"Successfully imported {num_imported} fire distinguisher records.")
+                messages.success(request, _("Successfully imported %(count)d fire extinguisher records.") % {'count': num_imported})
 
         else:
-            messages.error(request, f"Error importing fire distinguisher data no file provided")
+            messages.error(request, _("Error importing fire extinguisher data: No file provided."))
     return redirect('haspro_app:tools-view')
 
 
@@ -370,13 +371,13 @@ def get_db_snapshot(request):
     try:
         if not request.company:
             return render(request, '404.html', {
-                'error_message': "No company found for the current project."
+                'error_message': _("No company found for the current project.")
             }, status=404)
         buffer = create_snapshot_file(request.company)
     except Exception as e:
         logger.error(f"Error creating snapshot for user {request.user.id}: {e} Traceback: {traceback.format_exc()}", exc_info=True)
         return render(request, '500.html', {
-            'error_message': "Error creating database snapshot."
+            'error_message': _("Error creating database snapshot.")
         }, status=500)
 
     return FileResponse(buffer, as_attachment=True, filename='db_snapshot.bin')
@@ -390,17 +391,17 @@ def upload_inspection_records(request):
         file = request.FILES.get('file')
         if file:
             if not request.company:
-                messages.error(request, "Error updating inspection records: No company found.")
+                messages.error(request, _("Error updating inspection records: No company found."))
                 return redirect('haspro_app:tools-view')
 
             num_updated, error_message = add_inspection(request.user, request.company, file)
             if error_message:
-                messages.error(request, f"Error updating inspection records: {error_message}")
+                messages.error(request, _("Error updating inspection records: %(error)s") % {'error': error_message})
             else:
-                messages.success(request, f"Successfully updated {num_updated} inspection records.")
+                messages.success(request, _("Successfully updated %(count)d inspection records.") % {'count': num_updated})
 
         else:
-            messages.error(request, "Error updating inspection records: No file provided.")
+            messages.error(request, _("Error updating inspection records: No file provided."))
 
     return redirect('haspro_app:tools-view')
 

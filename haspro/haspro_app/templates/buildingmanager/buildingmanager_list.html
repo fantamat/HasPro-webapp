@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
-<h2>Building Managers</h2>
+<h2>{% trans "Building Managers" %}</h2>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Phone</th>
-            <th>Phone 2</th>
-            <th>Email</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Address" %}</th>
+            <th>{% trans "Phone" %}</th>
+            <th>{% trans "Phone 2" %}</th>
+            <th>{% trans "Email" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -21,9 +22,9 @@
             <td>{{ manager.email }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="5">No building managers found.</td></tr>
+        <tr><td colspan="5">{% trans "No building managers found." %}</td></tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'haspro_app:buildingmanager-create' %}" class="btn-add">Add Building Manager</a>
+<a href="{% url 'haspro_app:buildingmanager-create' %}" class="btn-add">{% trans "Add Building Manager" %}</a>
 {% endblock %}
