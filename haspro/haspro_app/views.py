@@ -36,7 +36,7 @@ def company_decorator(view_func):
 @company_decorator
 def home(request):
     if not request.user or not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('account_login')
     else:
         return render(request, 'home.html', {'user': request.user, 'company': request.company, 'permissions': request.project_permission})
 

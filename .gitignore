@@ -94,3 +94,5 @@ node_modules/
 npm-debug.log
 
 *.mo
+
+*.env

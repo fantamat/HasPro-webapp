@@ -101,7 +101,7 @@ def project_permission_decorator(require_admin=False, require_edit=False, requir
 
                 return view_func(request, *args, **kwargs)
             else:
-                return redirect('login')
+                return redirect('account_login')
 
         return _wrapped_view
     return project_decorator
