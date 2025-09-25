@@ -79,3 +79,13 @@ FireDistinguisherPlacement
 
 
 Fill out the models.py for this app
+
+
+
+## Debuging
+
+
+```
+sudo ENV=dev sh build.sh
+sudo ENV=dev docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up
+```

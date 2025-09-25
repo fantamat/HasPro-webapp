@@ -8,7 +8,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # Copy files needed for installation
-COPY requirements/dev.txt ./requirements/dev.txt
+COPY pyproject.toml ./pyproject.toml
+COPY .python-version ./.python-version
+COPY uv.lock ./uv.lock
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -18,8 +20,8 @@ RUN apt-get update && \
 
 # Install Python dependencies with uv
 RUN pip install uv && \
-    uv venv --python=python3.12 && \
-    uv pip sync requirements/dev.txt && \
+    uv venv && \
+    uv sync && \
     uv pip install uvicorn && \
     pip uninstall -y uv
 
@@ -27,8 +29,8 @@ RUN pip install uv && \
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy app files
-COPY data/codebase/haspro ./haspro/
-COPY data/migrations/haspro /app/haspro/migrations
+COPY data/codebase/haspro /app/haspro
+COPY data/migrations/haspro_app /app/haspro/haspro_app/migrations
 COPY data/migrations/users /app/haspro/users/migrations
 
 
@@ -36,4 +38,4 @@ WORKDIR /app/haspro
 
 EXPOSE 8000
 
-CMD ["uvicorn", "haspro.asgi:application", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "haspro_project.asgi:application", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,0 +1,6 @@
+services:
+  haspro:
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=true

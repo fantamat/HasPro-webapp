@@ -9,6 +9,7 @@ services:
       - ./data/db:/app/data
       - ./data/media:/app/media
     restart: unless-stopped
+    
 
 networks:
   entrypoint:

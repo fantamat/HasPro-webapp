@@ -9,7 +9,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # Copy files needed for installation
-COPY requirements/dev.txt ./requirements/dev.txt
+COPY pyproject.toml ./pyproject.toml
+COPY .python-version ./.python-version
+COPY uv.lock ./uv.lock
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -19,8 +21,8 @@ RUN apt-get update && \
 
 # Install Python dependencies with uv
 RUN pip install uv && \
-    uv venv --python=python3.12 && \
-    uv pip sync requirements/dev.txt && \
+    uv venv && \
+    uv sync && \
     pip uninstall -y uv
 
 # activate the virtual environment
