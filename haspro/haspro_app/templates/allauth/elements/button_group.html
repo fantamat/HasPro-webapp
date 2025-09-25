@@ -1,5 +1,5 @@
 {% load allauth %}
-<div>
+<div class="button-group"{% if attrs.vertical %} style="flex-direction: column;"{% endif %}>
     {% slot %}
     {% endslot %}
 </div>

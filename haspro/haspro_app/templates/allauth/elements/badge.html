@@ -1,5 +1,5 @@
 {% load allauth %}
-<strong {% if attrs.title %}title="{{ attrs.title }}"{% endif %}>
+<span class="permission-badge {% if 'success' in attrs.tags %}granted{% elif 'warning' in attrs.tags or 'danger' in attrs.tags %}denied{% else %}granted{% endif %}" {% if attrs.title %}title="{{ attrs.title }}"{% endif %}>
     {% slot %}
     {% endslot %}
-</strong>
+</span>

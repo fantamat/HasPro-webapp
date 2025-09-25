@@ -1,5 +1,5 @@
 {% load allauth %}
-<p>
+<div class="message {% if attrs.level %}{{ attrs.level }}{% else %}info{% endif %}">
     {% slot message %}
     {% endslot %}
-</p>
+</div>

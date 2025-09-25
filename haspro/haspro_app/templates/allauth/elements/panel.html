@@ -1,14 +1,14 @@
 {% load allauth %}
-<section>
-    <h2>
+<div class="info-card" style="margin-bottom: 24px;">
+    <h3>
         {% slot title %}
         {% endslot %}
-    </h2>
+    </h3>
     {% slot body %}
     {% endslot %}
     {% if slots.actions %}
-        <ul>
-            {% for action in slots.actions %}<li>{{ action }}</li>{% endfor %}
-        </ul>
+        <div class="button-group" style="margin-top: 16px;">
+            {% for action in slots.actions %}{{ action }}{% endfor %}
+        </div>
     {% endif %}
-</section>
+</div>

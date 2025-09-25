@@ -3,6 +3,10 @@
       {% if attrs.action %}action="{{ attrs.action }}"{% endif %}>
     {% slot body %}
     {% endslot %}
-    {% slot actions %}
-    {% endslot %}
+    {% if slots.actions %}
+    <div class="button-group">
+        {% slot actions %}
+        {% endslot %}
+    </div>
+    {% endif %}
 </form>

@@ -1,2 +1,7 @@
 {% extends "allauth/layouts/base.html" %}
-{% block content %}{% endblock %}
+
+{% block content %}
+    <div style="max-width: 500px; margin: 48px auto; padding: 32px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        {% block inner %}{% endblock %}
+    </div>
+{% endblock %}
