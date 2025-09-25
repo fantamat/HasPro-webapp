@@ -96,6 +96,17 @@ class FiredistinguisherPlacement(models.Model):
 		return self.description
 	
 
+class FiredistinguisherServiceActionType(models.TextChoices):
+	INSPECTION = 'Inspection', 'Inspekce'
+	FULLFILMENT = 'Fullfilment', 'Náplň'
+	PRESURE_TEST = 'Presure Test', 'Tlaková zkouška'
+	MAINTENANCE = 'Maintenance', 'Údržba'
+	HOSE_REPLACEMENT = 'Hose Replacement', 'Výměna hadice'
+	VALVE_REPLACEMENT = 'Valve Replacement', 'Výměna ventilu'
+	REFILL_AND_PRESSURIZE = 'Refill and Pressurize', 'Náplň a natlakování'
+	SAFETY_PIN = 'Safety Pin', 'Pojistka'
+	OTHER = 'Other', 'Jiné'
+
 class FiredistinguisherServiceAction(models.Model):
 	action_type = models.CharField(max_length=100, db_index=True)
 	description = models.CharField(max_length=255)
@@ -120,7 +131,9 @@ class InspectionRecord(models.Model):
 	
 
 class FaultInspection(models.Model):
-    fault = models.ForeignKey(Fault, on_delete=models.CASCADE)
+    fault = models.ForeignKey(Fault, on_delete=models.CASCADE, null=True, blank=True)
+    short_name = models.CharField(max_length=100)
+    description = models.TextField()
     inspection = models.ForeignKey(InspectionRecord, on_delete=models.CASCADE)
     notes = models.TextField(blank=True, null=True)
     responsible_person = models.CharField(max_length=255, blank=True, null=True)
@@ -130,29 +143,6 @@ class FaultInspection(models.Model):
 
     def __str__(self):
         return f"Fault {self.fault.short_name} in inspection {self.inspection.id}"
-	
-
-class FiredistinguisherCondition(models.TextChoices):
-	NEW = 'New', 'New'
-	OK = 'OK', 'OK'
-	NOK = 'NOK', 'NOK'
-
-class FiredistinguisherInspection(models.Model):
-    firedistinguisher = models.ForeignKey(Firedistinguisher, on_delete=models.CASCADE)
-    inspection = models.ForeignKey(InspectionRecord, on_delete=models.CASCADE)
-    notes = models.TextField(blank=True, null=True)
-    condition = models.CharField(
-		max_length=20,
-		choices=FiredistinguisherCondition.choices,
-		blank=True,
-		null=True
-	)
-    fullfilment_date = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return f"Fire Distinguisher {self.firedistinguisher.serial_number} in inspection {self.inspection.id}"
-	
-
 
 class FaultPhoto(models.Model):
     fault_inspection = models.ForeignKey(FaultInspection, on_delete=models.CASCADE)

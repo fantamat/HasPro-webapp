@@ -1,7 +1,7 @@
 
 from django.shortcuts import render, redirect
 from urllib3 import request
-from .models import Building, BuildingOwner, BuildingManager, Firedistinguisher, FiredistinguisherPlacement, Company
+from .models import Building, BuildingOwner, BuildingManager, Firedistinguisher, FiredistinguisherPlacement, Company, Fault, PossibleFault
 from .forms.building_form import BuildingForm
 from .forms.owner_form import BuildingOwnerForm
 from .forms.buildingmanager_form import BuildingManagerForm
@@ -45,8 +45,10 @@ def building_list(request):
             .values_list('building', flat=True)
         )
         buildings = buildings.filter(id__in=building_with_firedist_placed)
-        
-    return render(request, 'building/building_list.html', {'buildings': buildings})
+
+    faults = Fault.objects.all()
+
+    return render(request, 'building/building_list.html', {'buildings': buildings, 'faults': faults})
 
 
 def building_create(request):
@@ -88,7 +90,39 @@ def building_edit(request, pk):
         id__in=latest_placement_objects.values_list('firedistinguisher', flat=True)
     )
 
-    return render(request, 'building/building_form.html', {'form': form, 'create': False, 'firedistinguishers': firedistinguishers})
+    faults = Fault.objects.all()
+    possible_faults = list(map(lambda x: x.fault, PossibleFault.objects.filter(building=building).all()))
+    additional_faults = list(filter(lambda x: x not in possible_faults, faults))
+
+    return render(request, 'building/building_form.html', {'form': form, 'create': False, 'firedistinguishers': firedistinguishers, 'possible_faults': possible_faults, 'additional_faults': additional_faults})
+
+
+def add_possible_fault(request, pk):
+    building = Building.objects.get(pk=pk)
+    if request.method == 'POST':
+        fault_ids = request.POST.getlist('fault')
+        if fault_ids:
+            added_count = 0
+            for fault_id in fault_ids:
+                try:
+                    fault = Fault.objects.get(pk=fault_id)
+                    possible_fault, created = PossibleFault.objects.get_or_create(
+                        building=building,
+                        fault=fault
+                    )
+                    if created:
+                        added_count += 1
+                except Fault.DoesNotExist:
+                    messages.error(request, f"Fault with ID {fault_id} does not exist.")
+            
+            if added_count > 0:
+                messages.success(request, f"Added {added_count} fault(s) to building.")
+            else:
+                messages.info(request, "No new faults were added (they may already exist for this building).")
+        else:
+            messages.warning(request, "No faults selected.")
+    return redirect('haspro_app:building-edit', pk=pk)
+
 
 def building_delete(request, pk):
     building = Building.objects.get(pk=pk)

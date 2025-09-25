@@ -40,7 +40,7 @@ def export_project_to_sqlite(company, file_name):
         dic TEXT,
         logo TEXT
     )''')
-    c.execute('''CREATE TABLE buildingowner (
+    c.execute('''CREATE TABLE building_owner (
         id INTEGER PRIMARY KEY,
         name TEXT,
         address TEXT,
@@ -50,7 +50,7 @@ def export_project_to_sqlite(company, file_name):
         dic TEXT,
         managed_by INTEGER
     )''')
-    c.execute('''CREATE TABLE buildingmanager (
+    c.execute('''CREATE TABLE building_manager (
         id INTEGER PRIMARY KEY,
         name TEXT,
         address TEXT,
@@ -74,7 +74,7 @@ def export_project_to_sqlite(company, file_name):
         short_name TEXT,
         description TEXT
     )''')
-    c.execute('''CREATE TABLE possiblefault (
+    c.execute('''CREATE TABLE possible_fault (
         id INTEGER PRIMARY KEY,
         fault INTEGER,
         building INTEGER
@@ -86,18 +86,18 @@ def export_project_to_sqlite(company, file_name):
         manufacturer TEXT,
         serial_number TEXT,
         eliminated INTEGER,
-        manufactured_year TEXT,
+        manufactured_year INTEGER,
         managed_by INTEGER,
         next_inspection TEXT
     )''')
-    c.execute('''CREATE TABLE firedistinguisherplacement (
+    c.execute('''CREATE TABLE firedistinguisher_placement (
         id INTEGER PRIMARY KEY,
         description TEXT,
         created_at TEXT,
         firedistinguisher INTEGER,
         building INTEGER
     )''')
-    c.execute('''CREATE TABLE firedistinguisherserviceaction (
+    c.execute('''CREATE TABLE firedistinguisher_service_action (
         id INTEGER PRIMARY KEY,
         action_type TEXT,
         description TEXT,
@@ -116,21 +116,21 @@ def export_project_to_sqlite(company, file_name):
     # Insert data
     c.execute('INSERT INTO company VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [company.id, company.name, company.address, company.city, company.zipcode, company.ico, company.dic, str(company.logo)])
     for obj in owners:
-        c.execute('INSERT INTO buildingowner VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.name, obj.address, obj.city, obj.zipcode, obj.ico, obj.dic, obj.managed_by_id])
+        c.execute('INSERT INTO building_owner VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.name, obj.address, obj.city, obj.zipcode, obj.ico, obj.dic, obj.managed_by_id])
     for obj in managers:
-        c.execute('INSERT INTO buildingmanager VALUES (?, ?, ?, ?, ?, ?)', [obj.id, obj.name, obj.address, obj.phone, obj.phone2, obj.email])
+        c.execute('INSERT INTO building_manager VALUES (?, ?, ?, ?, ?, ?)', [obj.id, obj.name, obj.address, obj.phone, obj.phone2, obj.email])
     for obj in buildings:
         c.execute('INSERT INTO building VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.building_id, obj.address, obj.city, obj.zipcode, obj.note, obj.company_id, obj.owner_id, obj.manager_id])
     for obj in faults:
         c.execute('INSERT INTO fault VALUES (?, ?, ?)', [obj.id, obj.short_name, obj.description])
     for obj in possible_faults:
-        c.execute('INSERT INTO possiblefault VALUES (?, ?, ?)', [obj.id, obj.fault_id, obj.building_id])
+        c.execute('INSERT INTO possible_fault VALUES (?, ?, ?)', [obj.id, obj.fault_id, obj.building_id])
     for obj in firedistinguisher:
-        c.execute('INSERT INTO firedistinguisher VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.kind, obj.type, obj.manufacturer, obj.serial_number, int(obj.eliminated), str(obj.manufactured_year), obj.managed_by_id, str(obj.next_inspection)])
+        c.execute('INSERT INTO firedistinguisher VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [obj.id, obj.kind, obj.type, obj.manufacturer, obj.serial_number, int(obj.eliminated), obj.manufactured_year, obj.managed_by_id, obj.next_inspection])
     for obj in placements:
-        c.execute('INSERT INTO firedistinguisherplacement VALUES (?, ?, ?, ?, ?)', [obj.id, obj.description, str(obj.created_at), obj.firedistinguisher_id, obj.building_id])
+        c.execute('INSERT INTO firedistinguisher_placement VALUES (?, ?, ?, ?, ?)', [obj.id, obj.description, str(obj.created_at), obj.firedistinguisher_id, obj.building_id])
     for obj in service_actions:
-        c.execute('INSERT INTO firedistinguisherserviceaction VALUES (?, ?, ?, ?, ?)', [obj.id, obj.action_type, obj.description, str(obj.created_at), obj.firedistinguisher_id])
+        c.execute('INSERT INTO firedistinguisher_service_action VALUES (?, ?, ?, ?, ?)', [obj.id, obj.action_type, obj.description, str(obj.created_at), obj.firedistinguisher_id])
 
     # Insert company logo file into files table if logo exists
     if company.logo:
@@ -146,7 +146,7 @@ def export_project_to_sqlite(company, file_name):
 
     conn.commit()
     
-    c.execute('VACUUM')
+    c.execute('VACUUM')     
     conn.close()
 
 

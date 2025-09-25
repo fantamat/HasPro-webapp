@@ -21,6 +21,7 @@ urlpatterns = [
     path('buildings/create/', views.building_create, name='building-create'),
     path('buildings/<int:pk>/edit/', views.building_edit, name='building-edit'),
 	path('buildings/<int:pk>/delete/', views.building_delete, name='building-delete'),
+	path('buildings/<int:pk>/add-possible-fault/', views.add_possible_fault, name='add-possible-fault'),
     
 	path('firedistinguisher/', views.firedistinguisher_list, name='firedistinguisher-list'),
 	path('firedistinguisher/create/', views.firedistinguisher_create, name='firedistinguisher-create'),

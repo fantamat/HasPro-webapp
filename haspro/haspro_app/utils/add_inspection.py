@@ -9,7 +9,6 @@ from django.core.files import File
 from ..models import (
     InspectionRecord, 
     FaultInspection, 
-    FiredistinguisherInspection, 
     Building, 
     FaultPhoto,
     Firedistinguisher,
@@ -89,14 +88,14 @@ def _add_inspection_record(obj_map, conn, user, company, db_file_buffer):
 
 def _add_fault_records(obj_map, conn):
     with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM FaultInspection")
+        cursor.execute("SELECT * FROM fault_inspection")
         records = cursor.fetchall()
     
     num_updated = 0
 
     obj_map["FaultInspection"] = {}
     for record in records:
-        id, fault_id, inspection_id, notes, responsible_person, fix_due_date, resolved, present = record
+        id, fault_id, short_name, description, inspection_id, notes, responsible_person, fix_due_date, resolved, present = record
 
         if inspection_id not in obj_map["InspectionRecord"]:
             raise InspectionImportError(f"Referenced InspectionRecord ID {inspection_id} not found in the imported data.")
@@ -104,6 +103,8 @@ def _add_fault_records(obj_map, conn):
         # Create new FaultInspection
         fault_inspection = FaultInspection(
             fault_id=fault_id,
+            short_name=short_name,
+            description=description,
             inspection=obj_map["InspectionRecord"].get(inspection_id),
             notes=notes,
             responsible_person=responsible_person,
@@ -140,7 +141,7 @@ def _add_fault_records(obj_map, conn):
 
 def _add_new_firedistinguisher(obj_map, conn, company):
     with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM Firedistinguisher")
+        cursor.execute("SELECT * FROM firedistinguisher")
         records = cursor.fetchall()
     
     num_updated = 0
@@ -174,7 +175,7 @@ def _add_new_firedistinguisher(obj_map, conn, company):
 
 def _add_firedistinguisher_placements(obj_map, conn):
     with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM FiredistinguisherPlacement")
+        cursor.execute("SELECT * FROM firedistinguisher_placement")
         records = cursor.fetchall()
     
     num_updated = 0
@@ -202,37 +203,11 @@ def _add_firedistinguisher_placements(obj_map, conn):
 
 
 def _add_firedistinguisher_inspections(obj_map, conn):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM FiredistinguisherInspection")
-        records = cursor.fetchall()
     
     num_updated = 0
 
-    obj_map["FiredistinguisherInspection"] = {}
-    for record in records:
-        id, firedistinguisher_id, inspection_id, notes, condition, fullfilment_date = record
-
-        if inspection_id not in obj_map["InspectionRecord"]:
-            raise InspectionImportError(f"Referenced InspectionRecord ID {inspection_id} not found in the imported data.")
-
-        if firedistinguisher_id in obj_map["Firedistinguisher"]:
-            firedistinguisher_id = obj_map["Firedistinguisher"].get(firedistinguisher_id).pk
-
-        # Create new FiredistinguisherInspection
-        fi = FiredistinguisherInspection(
-            firedistinguisher_id=firedistinguisher_id,
-            inspection=obj_map["InspectionRecord"].get(inspection_id),
-            notes=notes,
-            condition=condition,
-            fullfilment_date=fullfilment_date
-        )
-        fi.save()
-
-        obj_map["FiredistinguisherInspection"][id] = fi
-        num_updated += 1
-
     with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM FiredistinguisherServiceAction")
+        cursor.execute("SELECT * FROM firedistinguisher_service_action")
         records = cursor.fetchall()
 
     obj_map["FiredistinguisherServiceAction"] = {}

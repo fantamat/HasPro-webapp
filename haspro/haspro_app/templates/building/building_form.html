@@ -37,6 +37,49 @@
 </table>    
 {% endif %}
 
+{% if not create and possible_faults %}
+<h3>Possible Faults for this Building</h3>
+<ul class="possible-faults-list">
+    {% for fault in possible_faults %}
+    <li class="possible-fault"><b>{{ fault.short_name }}</b> - {{ fault.description }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if not create and additional_faults %}
+<div class="expandable-section">
+    <h3 class="expandable-header" onclick="toggleSection('add-faults-section')" style="cursor: pointer; display: flex; align-items: center;">
+        <span class="expand-icon" id="add-faults-icon">▶</span>
+        Add More Possible Faults
+    </h3>
+    <div id="add-faults-section" class="expandable-content" style="display: none;">
+        <form method="post" action="{% url 'haspro_app:add-possible-fault' form.instance.pk %}">
+            {% csrf_token %}
+            {% for fault in additional_faults %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="fault_{{ fault.id }}" name="fault" value="{{ fault.id }}">
+                    <label class="form-check-label" for="fault_{{ fault.id }}">
+                        <b>{{ fault.short_name }}</b> - {{ fault.description }}
+                    </label>
+                </div>
+            {% endfor %}
+
+            {% if additional_faults|length > 3 %}
+            <hr>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="select-all" onchange="toggleAllFaults(this)">
+                <label class="form-check-label" for="select-all">
+                    <strong>Toggle All</strong>
+                </label>
+            </div>
+            <hr>
+            {% endif %}
+            <button type="submit" class="btn">Add Faults</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
 {% if not create and firedistinguishers %}
 <h3>Fire Distinguishers in this Building</h3>
 <table class="table">
