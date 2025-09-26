@@ -4,7 +4,7 @@
 <h2>{% if create %}{% trans "Add Building Owner" %}{% else %}{% trans "Edit Building Owner" %}{% endif %}</h2>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% include "base_form.html" with form=form %}
 
     <div class="button-group">
         <button type="submit" class="btn">{% trans "Save" %}</button>
