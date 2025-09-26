@@ -67,7 +67,9 @@ def export_project_to_sqlite(company, file_name):
         note TEXT,
         company INTEGER,
         owner INTEGER,
-        manager INTEGER
+        manager INTEGER,
+        last_inspection_date TEXT,
+        inspection_interval_days INTEGER
     )''')
     c.execute('''CREATE TABLE fault (
         id INTEGER PRIMARY KEY,
@@ -126,8 +128,8 @@ def export_project_to_sqlite(company, file_name):
         c.execute('INSERT INTO building_manager VALUES (?, ?, ?, ?, ?, ?)', [
             obj.id, obj.name, obj.address, obj.phone, obj.phone2, obj.email])
     for obj in buildings:
-        c.execute('INSERT INTO building VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-            obj.id, obj.building_id, obj.address, obj.city, obj.zipcode, obj.note, obj.company_id, obj.owner_id, obj.manager_id])
+        c.execute('INSERT INTO building VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            obj.id, obj.building_id, obj.address, obj.city, obj.zipcode, obj.note, obj.company_id, obj.owner_id, obj.manager_id, obj.last_inspection_date, obj.inspection_interval_days])
     for obj in faults:
         c.execute('INSERT INTO fault VALUES (?, ?, ?, ?)', [
             obj.id, obj.short_name, obj.description, obj.default_fix_time_days])

@@ -37,4 +37,5 @@ urlpatterns = [
 
     path('db/dump/snapshot/', views.get_db_snapshot, name='export-db-dump'),
     path('db/inspection/upload/', views.upload_inspection_records, name='upload-inspection-records'),
+    path('db/csrf/get/', views.get_csrf_token, name='get-csrf-token'),
 ]

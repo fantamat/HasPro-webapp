@@ -228,6 +228,7 @@ def _add_firedistinguisher_placements(obj_map, conn):
 
 def _add_firedistinguisher_inspections(obj_map, conn):
     
+    inspection_id = list(obj_map.get("InspectionRecord", {}).keys())[0]  # There should be only one inspection record
     num_updated = 0
 
     cursor = conn.cursor()
@@ -247,7 +248,8 @@ def _add_firedistinguisher_inspections(obj_map, conn):
             firedistinguisher=fd,
             action_type=action_type,
             description=description,
-            created_at=created_at
+            created_at=created_at,
+            inspection_id=inspection_id
         )
         service_action.save()
         obj_map["FiredistinguisherServiceAction"][id] = service_action
@@ -279,6 +281,10 @@ def _update_firedistinguisher_next_inspection(obj_map):
                 fd.next_periodic_test = fda.created_at + datetime.timedelta(days=365 * 5)  # Set next periodic test five years later
             fd.save()
     
+    building = Building.objects.filter(id=obj_map.get("InspectionRecord", {}).get(1).building.id).first()
+    if building:
+        building.last_inspection_date = obj_map.get("InspectionRecord", {}).get(1).date
+        building.save()
 
 
 def add_inspection(user, company, file):

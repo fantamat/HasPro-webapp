@@ -10,13 +10,14 @@ from .forms.feplacement_form import FiredistinguisherPlacementForm
 from .utils.db_dump import create_snapshot_file
 from .utils.imports import import_building_manager_data, import_firedistinguisher_data
 from .utils.add_inspection import add_inspection
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 from django.contrib import messages
 from django.utils.translation import gettext as _
 import logging
 import traceback
 from django.db.models import Max
 from users.utils import project_permission_decorator
+from django.middleware.csrf import get_token
 
 
 logger = logging.getLogger(__name__)
@@ -388,20 +389,39 @@ def get_db_snapshot(request):
 def upload_inspection_records(request):
     # Handle uploaded inspection data from mobile app
     if request.method == 'POST':
+        is_api = request.POST.get('is_api', 'false') == 'true'
         file = request.FILES.get('file')
         if file:
             if not request.company:
-                messages.error(request, _("Error updating inspection records: No company found."))
-                return redirect('haspro_app:tools-view')
+                if is_api:
+                    return JsonResponse({'success': False, 'error': _("No company found.")}, status=400)
+                else:
+                    messages.error(request, _("Error updating inspection records: No company found."))
+                    return redirect('haspro_app:tools-view')
 
             num_updated, error_message = add_inspection(request.user, request.company, file)
             if error_message:
-                messages.error(request, _("Error updating inspection records: %(error)s") % {'error': error_message})
+                if is_api:
+                    return JsonResponse({'success': False, 'error': error_message}, status=400)
+                else:
+                    messages.error(request, _("Error updating inspection records: %(error)s") % {'error': error_message})
             else:
-                messages.success(request, _("Successfully updated %(count)d inspection records.") % {'count': num_updated})
-
+                if is_api:
+                    return JsonResponse({'success': True, 'updated_count': num_updated})
+                else:
+                    messages.success(request, _("Successfully updated %(count)d inspection records.") % {'count': num_updated})
         else:
-            messages.error(request, _("Error updating inspection records: No file provided."))
+            if is_api:
+                return JsonResponse({'success': False, 'error': _("No file provided.")}, status=400)
+            else:
+                messages.error(request, _("Error updating inspection records: No file provided."))
 
     return redirect('haspro_app:tools-view')
 
+
+@project_permission_decorator(require_edit=True)
+@company_decorator
+def get_csrf_token(request):
+    # Logic to get CSRF token
+    csrf_token = get_token(request)
+    return JsonResponse({'csrfToken': csrf_token})

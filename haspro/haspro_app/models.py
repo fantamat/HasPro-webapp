@@ -62,6 +62,8 @@ class Building(models.Model):
 	company = models.ForeignKey(Company, on_delete=models.CASCADE, verbose_name=_("Company"))
 	owner = models.ForeignKey(BuildingOwner, on_delete=models.CASCADE, verbose_name=_("Owner"))
 	manager = models.ForeignKey(BuildingManager, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Manager"))
+	last_inspection_date = models.DateField(_("Last Inspection Date"), null=True, blank=True)
+	inspection_interval_days = models.IntegerField(_("Inspection Interval (Days)"), default=180)
 
 	class Meta:
 		verbose_name = _("Building")
@@ -166,6 +168,7 @@ class FiredistinguisherServiceAction(models.Model):
 	action_type = models.CharField(_("Action Type"), max_length=100, db_index=True)
 	description = models.CharField(_("Description"), max_length=255)
 	created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
+	inspection = models.ForeignKey('InspectionRecord', on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Inspection"), related_name='firedistinguisher_actions')
 	
 	class Meta:
 		verbose_name = _("Fire Extinguisher Service Action")
