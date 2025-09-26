@@ -87,8 +87,9 @@
     <thead>
         <tr>
             <th>{% trans "Serial Number" %}</th>
-            <th>{% trans "Kind" %}</th>
-            <th>{% trans "Type" %}</th>
+            <th>{% trans "Kind" %}</th> 
+            <th>{% trans "Size" %}</th>
+            <th>{% trans "Power" %}</th>
             <th>{% trans "Manufacturer" %}</th>
             <th>{% trans "Manufactured Year" %}</th>
             <th>{% trans "Eliminated" %}</th>
@@ -98,8 +99,9 @@
         {% for fd in firedistinguishers %}
         <tr onclick="window.location.href='{% url 'haspro_app:firedistinguisher-edit' fd.pk %}'" style="cursor: pointer;">
             <td>{{ fd.serial_number }}</td>
-            <td>{{ fd.kind }}</td>
-            <td>{{ fd.type }}</td>
+            <td>{{ fd.get_kind_display }}</td>
+            <td>{{ fd.size_short }}</td>
+            <td>{{ fd.power }}</td>
             <td>{{ fd.manufacturer }}</td>
             <td>{{ fd.manufactured_year }}</td>
             <td>{% if fd.eliminated %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>

@@ -12,3 +12,13 @@ class WidgetClassForm(forms.ModelForm):
                     field.widget.attrs['class'] += ' ' + self.widget_additional_classes[field_name]
                 else:
                     field.widget.attrs['class'] = self.widget_additional_classes[field_name]
+
+
+
+
+class DateInput(forms.DateInput):
+    """Custom DateInput widget that forces ISO format for HTML5 date inputs"""
+    def format_value(self, value):
+        if value:
+            return value.strftime('%Y-%m-%d')
+        return ''

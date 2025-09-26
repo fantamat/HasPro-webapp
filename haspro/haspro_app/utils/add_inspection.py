@@ -2,6 +2,7 @@ import sqlite3
 import tempfile
 import os
 import io
+import datetime
 
 from django.db import transaction
 from django.core.files import File
@@ -14,6 +15,8 @@ from ..models import (
     Firedistinguisher,
     FiredistinguisherPlacement,
     FiredistinguisherServiceAction,
+    FiredistinguisherServiceActionType,
+    FiredistinguisherKind,
 )
 
 
@@ -30,7 +33,15 @@ def connect_and_verify_db(file_path):
         # Example: get all table names
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = cursor.fetchall()
-        required_tables = {"InspectionRecord", "FaultInspection"} # TODO fill all required tables
+        required_tables = {
+            "inspection_record", 
+            "fault_inspection", 
+            "fault_photo", 
+            "firedistinguisher", 
+            "firedistinguisher_placement", 
+            "firedistinguisher_service_action", 
+            "database_version"
+        }
         table_names = {table[0] for table in tables}
         missing_tables = required_tables - table_names
         if missing_tables:
@@ -43,7 +54,7 @@ def connect_and_verify_db(file_path):
 
 def _add_inspection_record(obj_map, conn, user, company, db_file_buffer):
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM InspectionRecord")
+    cursor.execute("SELECT * FROM inspection_record")
     records = cursor.fetchall()
 
     if len(records) != 1:
@@ -52,15 +63,12 @@ def _add_inspection_record(obj_map, conn, user, company, db_file_buffer):
     obj_map["InspectionRecord"] = {}
 
     record = records[0]
-    id, inspector_id, date, notes, building_id, created_at, uploaded_file = record
+    id, _, date, notes, building_id, created_at, _ = record
 
     building = Building.objects.filter(id=building_id, company=company).first()
 
     if not building:
         raise InspectionImportError(f"Building with ID {building_id} not found in the current company.")
-
-    if inspector_id != user.id:
-        raise InspectionImportError("Inspector ID does not match the current user.")
 
     # Check if the record already exists
     existing = InspectionRecord.objects.filter(date=date, building_id=building_id).first()
@@ -79,6 +87,10 @@ def _add_inspection_record(obj_map, conn, user, company, db_file_buffer):
     )
 
     inspection.save()
+    
+    # Track the uploaded file for potential cleanup
+    if "uploaded_files" in obj_map and inspection.uploaded_file:
+        obj_map["uploaded_files"].append(inspection.uploaded_file.path)
 
     obj_map["InspectionRecord"][id] = inspection
     
@@ -87,15 +99,18 @@ def _add_inspection_record(obj_map, conn, user, company, db_file_buffer):
 
 
 def _add_fault_records(obj_map, conn):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM fault_inspection")
-        records = cursor.fetchall()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM fault_inspection")
+    records = cursor.fetchall()
     
     num_updated = 0
 
     obj_map["FaultInspection"] = {}
     for record in records:
         id, fault_id, short_name, description, inspection_id, notes, responsible_person, fix_due_date, resolved, present = record
+
+        if fix_due_date and len(fix_due_date) > 10:
+            fix_due_date = fix_due_date[:10]
 
         if inspection_id not in obj_map["InspectionRecord"]:
             raise InspectionImportError(f"Referenced InspectionRecord ID {inspection_id} not found in the imported data.")
@@ -117,9 +132,8 @@ def _add_fault_records(obj_map, conn):
         obj_map["FaultInspection"][id] = fault_inspection
         num_updated += 1
 
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM FaultPhoto")
-        records = cursor.fetchall()
+    cursor.execute("SELECT * FROM fault_photo")
+    records = cursor.fetchall()
 
     obj_map["FaultPhoto"] = {}
 
@@ -129,42 +143,52 @@ def _add_fault_records(obj_map, conn):
         if fault_id not in obj_map["FaultInspection"]:
             raise InspectionImportError(f"Referenced FaultInspection ID {fault_id} not found in the imported data.")
 
+        # Create new File
+        photo_file = File(io.BytesIO(photo))
+        photo_file.name = f"fault_{fault_id:04d}_photo_{id:04d}.jpg"
+
         fault_photo = FaultPhoto(
             fault_inspection=obj_map["FaultInspection"].get(fault_id),
-            photo=File(io.BytesIO(photo)),
+            photo=photo_file,
             uploaded_at=uploaded_at
         )
         fault_photo.save()
+        
+        # Track the uploaded file for potential cleanup
+        if "uploaded_files" in obj_map and fault_photo.photo:
+            obj_map["uploaded_files"].append(fault_photo.photo.path)
+        
         obj_map["FaultPhoto"][id] = fault_photo
 
     return num_updated
 
 def _add_new_firedistinguisher(obj_map, conn, company):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM firedistinguisher")
-        records = cursor.fetchall()
-    
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM firedistinguisher")
+    records = cursor.fetchall()
+
     num_updated = 0
 
     obj_map["Firedistinguisher"] = {}
     for record in records:
-        id, kind, type, manufacturer, serial_number, eliminated, last_inspection, manufactured_year, last_fullfilment, managed_by_id = record
+        id, kind, size, power, manufacturer, serial_number, eliminated, manufactured_year, managed_by_id, next_inspection = record
 
-
-        if Firedistinguisher.objects.filter(serial_number=serial_number).exists():
+        fd = Firedistinguisher.objects.filter(serial_number=serial_number).first()
+        if fd:
+            obj_map["Firedistinguisher"][id] = fd
             continue  # Skip existing
 
         # Create new Firedistinguisher
         fd = Firedistinguisher(
             kind=kind,
-            type=type,
+            size=size,
+            power=power,
             manufacturer=manufacturer,
             serial_number=serial_number,
             eliminated=eliminated,
-            last_inspection=last_inspection,
             manufactured_year=manufactured_year,
-            last_fullfilment=last_fullfilment,
-            managed_by=company
+            managed_by=company,
+            next_inspection=next_inspection
         )
         fd.save()
 
@@ -174,10 +198,10 @@ def _add_new_firedistinguisher(obj_map, conn, company):
     return num_updated
 
 def _add_firedistinguisher_placements(obj_map, conn):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM firedistinguisher_placement")
-        records = cursor.fetchall()
-    
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM firedistinguisher_placement")
+    records = cursor.fetchall()
+
     num_updated = 0
 
     obj_map["FiredistinguisherPlacement"] = {}
@@ -206,9 +230,9 @@ def _add_firedistinguisher_inspections(obj_map, conn):
     
     num_updated = 0
 
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM firedistinguisher_service_action")
-        records = cursor.fetchall()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM firedistinguisher_service_action")
+    records = cursor.fetchall()
 
     obj_map["FiredistinguisherServiceAction"] = {}
     for record in records:
@@ -217,8 +241,10 @@ def _add_firedistinguisher_inspections(obj_map, conn):
         if firedistinguisher_id not in obj_map["Firedistinguisher"]:
             raise InspectionImportError(f"Referenced Firedistinguisher ID {firedistinguisher_id} not found in the imported data.")
 
+        fd = obj_map["Firedistinguisher"].get(firedistinguisher_id)
+
         service_action = FiredistinguisherServiceAction(
-            firedistinguisher=obj_map["Firedistinguisher"].get(firedistinguisher_id),
+            firedistinguisher=fd,
             action_type=action_type,
             description=description,
             created_at=created_at
@@ -227,6 +253,32 @@ def _add_firedistinguisher_inspections(obj_map, conn):
         obj_map["FiredistinguisherServiceAction"][id] = service_action
 
     return num_updated
+
+
+
+def _update_firedistinguisher_next_inspection(obj_map):
+    for fda in obj_map.get("FiredistinguisherServiceAction", {}).values():
+        if fda.action_type == FiredistinguisherServiceActionType.INSPECTION:
+            fd = Firedistinguisher.objects.filter(id=fda.firedistinguisher.id).first()
+            fd.next_inspection = fda.created_at + datetime.timedelta(days=365)  # Set next inspection one year later
+            fd.save()
+
+        elif fda.action_type == FiredistinguisherServiceActionType.ELIMINATION:
+            fd = Firedistinguisher.objects.filter(id=fda.firedistinguisher.id).first()
+            fd.eliminated = True
+            fd.next_inspection = None
+            fd.next_periodic_test = None
+            fd.save()
+
+        elif fda.action_type == FiredistinguisherServiceActionType.PERIODIC_TEST:
+            fd = Firedistinguisher.objects.filter(id=fda.firedistinguisher.id).first()
+            fd.next_inspection = fda.created_at + datetime.timedelta(days=365)  # Set next inspection one year later
+            if fd.kind == FiredistinguisherKind.WATER or fd.kind == FiredistinguisherKind.FOAM:
+                fd.next_periodic_test = fda.created_at + datetime.timedelta(days=365 * 3)  # Set next periodic test three years later
+            else:
+                fd.next_periodic_test = fda.created_at + datetime.timedelta(days=365 * 5)  # Set next periodic test five years later
+            fd.save()
+    
 
 
 def add_inspection(user, company, file):
@@ -242,20 +294,54 @@ def add_inspection(user, company, file):
     :return: A tuple (num_updated, error_message). If error_message is None,
     """
 
-
-    with tempfile.NamedTemporaryFile(delete=True) as temp_file:
+    # Create a temporary file that won't be auto-deleted
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         temp_file.write(file.read())
-        temp_file.flush()
-        temp_file.close()
-        
-        connect_and_verify_db(temp_file.name)
- 
-        with sqlite3.connect(temp_file.name) as conn:
+        temp_file.flush()  # Ensure data is written to disk
+        temp_filename = temp_file.name
+
+    # Track uploaded files for cleanup on failure
+    uploaded_files = []
+    
+    try:
+        connect_and_verify_db(temp_filename)
+
+        with sqlite3.connect(temp_filename) as conn:
             with transaction.atomic():
-                obj_map = {}
+                obj_map = {"uploaded_files": uploaded_files}  # Pass the list to track files
                 _add_inspection_record(obj_map, conn, user, company, file)
                 _add_fault_records(obj_map, conn)
                 _add_new_firedistinguisher(obj_map, conn, company)
                 _add_firedistinguisher_placements(obj_map, conn)
                 _add_firedistinguisher_inspections(obj_map, conn)
+                
+        _update_firedistinguisher_next_inspection(obj_map)
+
+        # If we get here, transaction was successful
+        return len(obj_map.get("InspectionRecord", {})), None
+        
+    except InspectionImportError as e:
+        # Clean up uploaded files if transaction fails
+        for file_path in uploaded_files:
+            try:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            except OSError:
+                pass  # Ignore cleanup errors
+        return 0, str(e)
+    except Exception as e:
+        # Clean up uploaded files if transaction fails  
+        for file_path in uploaded_files:
+            try:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            except OSError:
+                pass  # Ignore cleanup errors
+        raise e
+    finally:
+        # Clean up the temporary file
+        if os.path.exists(temp_filename):
+            os.remove(temp_filename)
+
+
 

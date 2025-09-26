@@ -6,7 +6,8 @@
     <thead>
         <tr>
             <th>{% trans "Kind" %}</th>
-            <th>{% trans "Type" %}</th>
+            <th>{% trans "Size" %}</th>
+            <th>{% trans "Power" %}</th>
             <th>{% trans "Manufacturer" %}</th>
             <th>{% trans "Serial Number" %}</th>
             <th>{% trans "Eliminated" %}</th>
@@ -18,8 +19,9 @@
     <tbody>
         {% for fd in firedistinguisher_list %}
         <tr onclick="window.location.href = `{% url 'haspro_app:firedistinguisher-edit' fd.pk %}`;">
-            <td>{{ fd.kind }}</td>
-            <td>{{ fd.type }}</td>
+            <td>{{ fd.get_kind_display }}</td>
+            <td>{{ fd.size_short }}</td>
+            <td>{{ fd.power }}</td>
             <td>{{ fd.manufacturer }}</td>
             <td>{{ fd.serial_number }}</td>
             <td>{{ fd.eliminated|yesno:"Ano,Ne" }}</td>

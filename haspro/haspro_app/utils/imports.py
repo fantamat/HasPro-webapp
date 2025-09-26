@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import logging
 
-from ..models import BuildingManager, Building, Firedistinguisher, FiredistinguisherPlacement
+from ..models import BuildingManager, Building, Firedistinguisher, FiredistinguisherPlacement, FiredistinguisherKind
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,10 +37,16 @@ def process_building_manager_row(row, owner, company):
     out = 0
 
     # Process the row and create a BuildingManager instance
-    building_manager = BuildingManager.objects.filter(name=row["Funkcionář"]).first()
+    person_name = str(row["Funkcionář"])\
+        .replace("Správce-náhr.orgán", "")\
+        .replace("Předseda samosprávy", "")\
+        .replace("Předseda SVJ", "")\
+        .strip()
+
+    building_manager = BuildingManager.objects.filter(name=person_name).first()
     if building_manager is None:
         building_manager = BuildingManager(
-            name=row["Funkcionář"],
+            name=person_name,
             address=row["Adresa"],
             phone=row["Telefon"],
             email=row["Email"]
@@ -135,6 +141,34 @@ def _next_inspection(row):
 
 
 
+def _get_kind_and_size(text: str):
+    text = text.strip().lower()
+    kind = FiredistinguisherKind.OTHER
+    size = None
+
+    kind_char = text[0]
+    if kind_char == 's':
+        kind = FiredistinguisherKind.SNOW
+    elif kind_char == 'p':
+        kind = FiredistinguisherKind.POWDER
+    elif kind_char == 'v' or kind_char == 'w':
+        kind = FiredistinguisherKind.WATER
+    elif kind_char == 'f' or kind_char == 'p':
+        kind = FiredistinguisherKind.FOAM
+    else:
+        kind = FiredistinguisherKind.OTHER
+        
+    if len(text) > 1:
+        size_text = text[1:].strip()
+        try:
+            size = float(size_text.replace(',', '.'))
+        except ValueError:
+            size = None
+
+    return kind, size
+
+
+
 def process_firedistinguisher_row(row, owner, company):
     if row is None or "Výrobní číslo" not in row or pd.isna(row["Výrobní číslo"]):
         return 0
@@ -159,24 +193,28 @@ def process_firedistinguisher_row(row, owner, company):
 
     # Process the row and create a Firedistinguisher instance
     firedistinguisher = Firedistinguisher.objects.filter(serial_number=serial_number, managed_by=company).first()
+    kind, size = _get_kind_and_size(str(row["Druh"]))
+
+
+
     if firedistinguisher is None:
         firedistinguisher = Firedistinguisher(
-            kind=row["Druh"],
-            type=row["Typ"],
+            kind=kind,
+            size=size,
+            power=row["Typ"],
             manufacturer=row["Výrobce"],
             serial_number=serial_number,
             eliminated=_eliminated(row),
-            last_inspection=None,
             manufactured_year=manufactured_year,
-            last_fullfilment=None,
             managed_by=company,
             next_inspection=_next_inspection(row)
         )
         firedistinguisher.save()
         out += 1
     else:
-        firedistinguisher.kind = row["Druh"]
-        firedistinguisher.type = row["Typ"]
+        firedistinguisher.kind = kind
+        firedistinguisher.size = size
+        firedistinguisher.power = row["Typ"]
         firedistinguisher.manufacturer = row["Výrobce"]
         firedistinguisher.eliminated = _eliminated(row)
         firedistinguisher.manufactured_year = manufactured_year

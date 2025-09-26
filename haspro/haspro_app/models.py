@@ -3,6 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import Project, User
 
+import math
+
 
 class Company(models.Model):
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="companies", verbose_name=_("Project"))
@@ -94,15 +96,26 @@ class PossibleFault(models.Model):
 	def __str__(self):
 		return f"{self.fault.short_name} in {self.building.building_id}"
 
+
+class FiredistinguisherKind(models.TextChoices):
+	SNOW = 'Snow', _('Snow')
+	POWDER = 'Powder', _('Powder')
+	WATER = 'Water', _('Water')
+	FOAM = 'Foam', _('Foam')
+	OTHER = 'Other', _('Other')
+
+
 class Firedistinguisher(models.Model):
-	kind = models.CharField(_("Kind"), max_length=100)
-	type = models.CharField(_("Type"), max_length=100)
+	kind = models.CharField(_("Kind"), max_length=100, choices=FiredistinguisherKind.choices)
+	size = models.FloatField(_("Size"), null=True, blank=True)
+	power = models.CharField(_("Power"), max_length=100)
 	manufacturer = models.CharField(_("Manufacturer"), max_length=100)
 	serial_number = models.CharField(_("Serial Number"), max_length=100)
 	eliminated = models.BooleanField(_("Eliminated"), default=False)
 	manufactured_year = models.IntegerField(_("Manufactured Year"), null=True, blank=True)
 	managed_by = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Managed by"))
 	next_inspection = models.DateField(_("Next Inspection"), null=True, blank=True)
+	next_periodic_test = models.DateField(_("Next Periodic Test"), null=True, blank=True)
 
 	class Meta:
 		verbose_name = _("Fire Extinguisher")
@@ -114,6 +127,12 @@ class Firedistinguisher(models.Model):
 	def get_current_placement(self):
 		placement = FiredistinguisherPlacement.objects.filter(firedistinguisher=self).order_by('-created_at').first()
 		return placement
+	
+	def size_short(self):
+		if math.floor(self.size*10) % 10 == 0:
+			return str(int(self.size))
+		else:
+			return str(round(self.size, 1))
 
 class FiredistinguisherPlacement(models.Model):
 	description = models.CharField(_("Description"), max_length=255)
@@ -130,22 +149,24 @@ class FiredistinguisherPlacement(models.Model):
 	
 
 class FiredistinguisherServiceActionType(models.TextChoices):
-	INSPECTION = 'Inspection', _('Inspection')
-	FULLFILMENT = 'Fullfilment', _('Filling')
-	PRESURE_TEST = 'Presure Test', _('Pressure Test')
-	MAINTENANCE = 'Maintenance', _('Maintenance')
-	HOSE_REPLACEMENT = 'Hose Replacement', _('Hose Replacement')
-	VALVE_REPLACEMENT = 'Valve Replacement', _('Valve Replacement')
-	REFILL_AND_PRESSURIZE = 'Refill and Pressurize', _('Refill and Pressurize')
-	SAFETY_PIN = 'Safety Pin', _('Safety Pin')
-	OTHER = 'Other', _('Other')
+	INSPECTION = 'inspection', _('Inspection')
+	ELIMINATION = 'elimination', _('Elimination')
+	REFILL = 'refill', _('Refill')
+	PERIODIC_TEST = 'periodic_test', _('Periodic Test')
+	MAINTENANCE = 'maintenance', _('Maintenance')
+	HOSE_REPLACEMENT = 'hose_replacement', _('Hose Replacement')
+	VALVE_REPLACEMENT = 'valve_replacement', _('Valve Replacement')
+	REFILL_AND_PRESSURIZE = 'refill_and_pressurize', _('Refill and Pressurize')
+	SAFETY_PIN = 'safety_pin', _('Safety Pin')
+	OTHER = 'other', _('Other')
+
 
 class FiredistinguisherServiceAction(models.Model):
+	firedistinguisher = models.ForeignKey(Firedistinguisher, on_delete=models.CASCADE, verbose_name=_("Fire Extinguisher"))
 	action_type = models.CharField(_("Action Type"), max_length=100, db_index=True)
 	description = models.CharField(_("Description"), max_length=255)
 	created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
-	firedistinguisher = models.ForeignKey(Firedistinguisher, on_delete=models.CASCADE, verbose_name=_("Fire Extinguisher"))
-
+	
 	class Meta:
 		verbose_name = _("Fire Extinguisher Service Action")
 		verbose_name_plural = _("Fire Extinguisher Service Actions")
@@ -157,7 +178,7 @@ class FiredistinguisherServiceAction(models.Model):
 
 class InspectionRecord(models.Model):
     inspector = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name=_("Inspector"))
-    date = models.DateField(_("Date"), auto_now_add=True)
+    date = models.DateTimeField(_("Date"), auto_now_add=True)
     notes = models.TextField(_("Notes"), blank=True, null=True)
     building = models.ForeignKey(Building, on_delete=models.CASCADE, verbose_name=_("Building"))
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)

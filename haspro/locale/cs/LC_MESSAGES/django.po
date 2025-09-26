@@ -180,10 +180,37 @@ msgstr "Možné závady"
 msgid "Kind"
 msgstr "Druh"
 
-#: haspro_app/models.py:99 haspro_app/templates/building/building_form.html:91
-#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:9
-msgid "Type"
-msgstr "Typ"
+#: haspro_app/models.py:99
+msgid "Snow"
+msgstr "Sněhový"
+
+#: haspro_app/models.py:100
+msgid "CO2"
+msgstr "CO2"
+
+#: haspro_app/models.py:101
+msgid "Powder"
+msgstr "Práškový"
+
+#: haspro_app/models.py:102
+msgid "Water"
+msgstr "Vodní"
+
+#: haspro_app/models.py:103
+msgid "Foam"
+msgstr "Pěnový"
+
+#: haspro_app/models.py:104 haspro_app/models.py:141
+msgid "Other"
+msgstr "Jiné"
+
+#: haspro_app/models.py:107
+msgid "Size"
+msgstr "Velikost"
+
+#: haspro_app/models.py:108
+msgid "Power"
+msgstr "Hasivost"
 
 #: haspro_app/models.py:100 haspro_app/templates/building/building_form.html:92
 #: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:10
@@ -209,6 +236,11 @@ msgstr "Rok výroby"
 #: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:14
 msgid "Next Inspection"
 msgstr "Příští kontrola"
+
+#: haspro_app/models.py:105
+#: haspro_app/templates/firedistinguisher/firedistinguisher_list.html:14
+msgid "Next Periodic Test"
+msgstr "Příští pravidelná zkouška"
 
 #: haspro_app/models.py:108 haspro_app/models.py:121 haspro_app/models.py:147
 msgid "Fire Extinguisher"
@@ -242,8 +274,8 @@ msgid "Filling"
 msgstr "Náplň"
 
 #: haspro_app/models.py:135
-msgid "Pressure Test"
-msgstr "Tlaková zkouška"
+msgid "Periodic Test"
+msgstr "Periodická zkouška"
 
 #: haspro_app/models.py:136
 msgid "Maintenance"
@@ -264,10 +296,6 @@ msgstr "Náplň a natlakování"
 #: haspro_app/models.py:140
 msgid "Safety Pin"
 msgstr "Pojistka"
-
-#: haspro_app/models.py:141
-msgid "Other"
-msgstr "Jiné"
 
 #: haspro_app/models.py:144
 #: haspro_app/templates/firedistinguisher/firedistinguisher_form.html:52
@@ -1861,6 +1889,10 @@ msgstr "Stáhnout snímek DB"
 msgid "Upload Inspection Records"
 msgstr "Nahrát záznamy kontrol"
 
+#: haspro_app/templates/tools/tools.html:55
+msgid "Upload inspection records from the mobile app to update fire extinguisher inspection data."
+msgstr "Nahrajte záznamy kontrol z mobilní aplikace pro aktualizaci dat kontrol hasicích přístrojů."
+
 #: haspro_app/templates/tools/tools.html:57
 msgid "Choose inspection file to upload"
 msgstr "Vybrat soubor kontroly k nahrání"
@@ -2033,3 +2065,6 @@ msgstr ""
 #: users/templates/user/user_settings.html:8
 msgid "User Settings"
 msgstr ""
+
+
+

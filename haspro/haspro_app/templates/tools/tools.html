@@ -52,13 +52,18 @@
 
 <form method="post" action="{% url 'haspro_app:upload-inspection-records' %}" enctype="multipart/form-data">
     <h2>{% trans "Upload Inspection Records" %}</h2>
+    <p>
+        {% trans "Upload inspection records from the mobile app to update fire extinguisher inspection data." %}
+    </p>
     {% csrf_token %}
     <p>
         <label for="inspection_file" class="form-label">{% trans "Choose inspection file to upload" %}</label>
-        <input type="file" class="form-control" id="inspection_file" name="file">
+        <input type="file" class="form-control" id="inspection_file" name="file" accept=".bin,.dat,.json,.db">
     </p>
     <button type="submit" class="btn">{% trans "Upload Inspection Records" %}</button>
 </form>
+
+
 
 
 
